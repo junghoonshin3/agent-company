@@ -1,0 +1,20 @@
+{
+  "name": "agentinc-local",
+  "interface": {
+    "displayName": "AgentInc Local Plugins"
+  },
+  "plugins": [
+    {
+      "name": "agent-company",
+      "source": {
+        "source": "local",
+        "path": "./plugins/agent-company"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

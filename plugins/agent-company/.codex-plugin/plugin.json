@@ -1,0 +1,42 @@
+{
+  "name": "agent-company",
+  "version": "0.1.6",
+  "description": "Run a tmux-based company of Codex worker agents from a facilitation skill.",
+  "author": {
+    "name": "AgentInc",
+    "email": "agentinc@example.com",
+    "url": "https://example.com/agentinc"
+  },
+  "homepage": "https://example.com/agent-company",
+  "repository": "https://example.com/agent-company.git",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "tmux",
+    "multi-agent",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Agent Company",
+    "shortDescription": "Coordinate a tmux office of Codex agents.",
+    "longDescription": "Agent Company gives Codex a facilitation workflow, a TypeScript MCP control server, and tmux-based Codex TUI employees for product planning, research, design, architecture, implementation, QA, release, and knowledge management.",
+    "developerName": "AgentInc",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://example.com/agent-company",
+    "privacyPolicyURL": "https://example.com/privacy",
+    "termsOfServiceURL": "https://example.com/terms",
+    "defaultPrompt": [
+      "Agent Company로 이 프로젝트의 제품팀을 열어줘.",
+      "대표 Agent로 이 기능을 기획하고 직원 토론을 취합해줘.",
+      "현재 회사 작업 현황을 요약해줘."
+    ],
+    "brandColor": "#2563EB"
+  }
+}
