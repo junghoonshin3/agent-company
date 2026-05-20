@@ -48,8 +48,9 @@ Do not call every employee by default. When a decision crosses multiple role bou
 7. Persist facilitator-facing minutes with `record_meeting` and final decisions with `record_decision` when the outcome is meaningful.
 8. Delegate implementation to the fullstack developer only after the intended scope, upstream decision source, and acceptance criteria are clear.
 9. Ask QA to verify the result and release manager to prepare release readiness notes only when those roles are relevant to the current risk.
-10. Use bounded waits. If `wait_for_task` fails or times out, record the failure, reroute or narrow the task, and avoid waiting on a stalled role forever.
-11. Keep the user informed with concise facilitator-level status, blockers, and approval requests.
+10. Use bounded waits for short planning, research, design, QA, release, and knowledge tasks. For fullstack implementation tasks, do not use a short `wait_for_task` timeout as a failure signal. Prefer a long wait such as 3600 seconds or repeated `task_status` checks until `done.json` appears, unless the worker explicitly reports `blocked` or the user tells you to stop.
+11. If a non-implementation `wait_for_task` fails or times out, record the failure, reroute or narrow the task, and avoid waiting on a stalled role forever. If an implementation task appears slow, report progress, inspect `task_status`, and keep waiting rather than taking over the work after a short wait.
+12. Keep the user informed with concise facilitator-level status, blockers, and approval requests.
 
 ## Approval Rules
 

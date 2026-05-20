@@ -52,7 +52,7 @@ const requiredMcpTools = [
 
 const plugin = JSON.parse(await readFile(path.join(pluginRoot, ".codex-plugin", "plugin.json"), "utf8"));
 assert.equal(plugin.name, "agent-company");
-assert.equal(plugin.version, "0.1.6");
+assert.equal(plugin.version, "0.1.7");
 assert.equal(plugin.skills, "./skills/");
 assert.equal(plugin.mcpServers, "./.mcp.json");
 assert.equal(plugin.interface.displayName, "Agent Company");
@@ -105,6 +105,8 @@ assert.match(skill, /auto-start-error\.json/);
 assert.match(skill, /start-office\.sh/);
 assert.match(skill, /stop-office\.sh/);
 assert.match(skill, /--project-dir/);
+assert.match(skill, /do not use a short `wait_for_task` timeout as a failure signal/);
+assert.match(skill, /repeated `task_status` checks/);
 
 const runtime = await readFile(path.join(pluginRoot, "server", "src", "runtime.ts"), "utf8");
 assert.match(runtime, /START_OFFICE_SCRIPT/);
@@ -194,6 +196,8 @@ assert.match(delegationRouting, /## 핸드오프 순서/);
 assert.match(delegationRouting, /## 실패와 타임아웃 처리/);
 assert.match(delegationRouting, /delegate_task/);
 assert.match(delegationRouting, /wait_for_task/);
+assert.match(delegationRouting, /풀스택 구현 작업에는 짧은 `wait_for_task` 시간을 실패 신호로 쓰지 않는다/);
+assert.match(delegationRouting, /반복적인 `task_status` 확인/);
 for (const roleTitle of [
   "서비스 기획자",
   "리서치 담당자",
