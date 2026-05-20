@@ -44,7 +44,7 @@ async function handleRequest(request: JsonRpcRequest): Promise<void> {
       writeResponse(request.id, {
         protocolVersion: request.params?.protocolVersion ?? "2024-11-05",
         capabilities: { tools: {} },
-        serverInfo: { name: "agent-company", version: "0.1.4" },
+        serverInfo: { name: "agent-company", version: "0.1.7" },
       });
       return;
     }

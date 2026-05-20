@@ -1,6 +1,6 @@
 {
   "name": "agent-company",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Run a tmux-based company of Codex worker agents from a facilitation skill.",
   "author": {
     "name": "AgentInc",
