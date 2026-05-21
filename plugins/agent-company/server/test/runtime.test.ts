@@ -13,11 +13,12 @@ import type { CommandResult, CommandRunner } from "../src/types.ts";
 const execFileAsync = promisify(execFile);
 
 const ROLE_REFERENCE_SNIPPETS: Record<string, string> = {
+  ceo: "사용자 요청을 회사 단위 작업으로 해석하고",
   "service-planner": "사용자의 모호한 목표를 실행 가능한 제품 문제",
   "researcher": "시장, 사용자, 경쟁 제품, 기술 선택지를 근거 중심으로 조사",
   "ui-ux-designer": "구현자가 바로 화면을 만들 수 있게 한다",
   "architect": "시스템 구조, 모듈 경계, 데이터 흐름, 구현 순서",
-  "fullstack-developer": "대표가 승인한 범위의 구현을 맡고",
+  "fullstack-developer": "CEO가 승인한 범위의 구현을 맡고",
   "qa-engineer": "품질 판단을 돕는다",
   "release-manager": "릴리즈 노트, 배포 전 체크리스트, 롤백 방법",
   "knowledge-manager": "재개 가능한 형태로 정리한다",
@@ -96,7 +97,9 @@ test("startCompany creates state, worktrees, and tmux windows", async () => {
   const config = await runtime.startCompany({ project_path: dir });
 
   assert.equal(config.projectPath, dir);
-  assert.equal(Object.keys(config.roles).length, 8);
+  assert.equal(Object.keys(config.roles).length, 9);
+  assert.ok(config.roles.ceo);
+  assert.equal(config.roles.ceo.windowName, "ceo");
   assert.ok(config.sessionName.startsWith("agent-company-"));
   assert.ok(runner.calls.some((call) => call.command === "tmux" && call.args[0] === "new-session"));
   assert.ok(runner.calls.some((call) => call.command === "tmux" && call.args[0] === "new-window"));
@@ -177,7 +180,7 @@ test("companyStatus reports running office dashboard metadata", async () => {
   await cleanup(dir);
 });
 
-test("startCompany bootstraps each worker with only its role reference and shared contracts", async () => {
+test("startCompany bootstraps each role with only its role reference and shared contracts", async () => {
   const { dir, runner } = await makeRuntime();
   const runtime = new AgentCompanyRuntime(runner);
 
@@ -203,6 +206,11 @@ test("startCompany bootstraps each worker with only its role reference and share
     assert.match(command, /references\/protocols\/workspaces\.md/);
     assert.match(command, /peer-message/);
     assert.match(command, new RegExp(`${role.id} <target_role>`));
+    if (role.id === "ceo") {
+      assert.match(command, /companyctl.*delegate/);
+      assert.match(command, /companyctl.*decision/);
+      assert.match(command, /자기 자신에게 다시 위임하지 않는다/);
+    }
 
     for (const otherRole of ROLE_DEFINITIONS) {
       if (otherRole.id === role.id) {
@@ -244,6 +252,36 @@ test("delegateTask writes inbox and sends a tmux message", async () => {
   assert.equal(board.tasks[0].id, task.id);
   assert.equal(board.tasks[0].status, "delegated");
   assert.equal(board.tasks[0].taskType, "planning");
+
+  await cleanup(dir);
+});
+
+test("delegateTask can send a user request to the persistent CEO", async () => {
+  const { dir, runner } = await makeRuntime();
+  const runtime = new AgentCompanyRuntime(runner);
+  const config = await runtime.startCompany({ project_path: dir });
+
+  const task = await runtime.delegateTask(
+    {
+      role: "ceo",
+      title: "Coordinate feature work",
+      instructions: "사용자 요청을 읽고 필요한 직원에게 위임한다.",
+      expected_output: "조율 결과와 사용자 보고.",
+    },
+    dir,
+  );
+
+  const inbox = await readFile(task.inboxPath, "utf8");
+  assert.equal(task.taskType, "general");
+  assert.match(inbox, /Role: CEO \(ceo\)/);
+  assert.match(inbox, /Role Reference: references\/roles\/ceo\.md/);
+  assert.match(inbox, /Applicable Playbook: references\/protocols\/task-playbooks\.md#general/);
+  assert.match(inbox, /## 프로세스 설계/);
+  assert.ok(runner.calls.some((call) =>
+    call.command === "tmux" &&
+    call.args[0] === "paste-buffer" &&
+    call.args.includes(`${config.sessionName}:ceo`)
+  ));
 
   await cleanup(dir);
 });
@@ -1020,6 +1058,29 @@ test("recordMeeting and recordDecision can link a discussion id", async () => {
 
   const status = await runtime.companyStatus(dir);
   assert.equal(status.recentMeetings[0].discussionId, "discussion-123");
+
+  await cleanup(dir);
+});
+
+test("companyctl decision command records CEO decisions", async () => {
+  const { dir, runner } = await makeRuntime();
+  const runtime = new AgentCompanyRuntime(runner);
+  await runtime.startCompany({ project_path: dir });
+  const cliPath = path.resolve("plugins/agent-company/server/src/companyctl.ts");
+
+  const result = await runCompanyctl(cliPath, [
+    "decision",
+    dir,
+    "Route user work through CEO",
+    "사용자 요청의 조율 책임을 상주 CEO에게 둔다.",
+    "medium",
+    "discussion-ceo",
+  ]);
+
+  assert.ok(result.path.endsWith(path.join(".agent-company", "decisions.md")));
+  const decisions = await readFile(result.path, "utf8");
+  assert.match(decisions, /Route user work through CEO/);
+  assert.match(decisions, /Discussion ID: discussion-ceo/);
 
   await cleanup(dir);
 });

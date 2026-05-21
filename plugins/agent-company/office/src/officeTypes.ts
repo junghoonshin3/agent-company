@@ -1,5 +1,6 @@
 // Agent Company 오피스 대시보드의 공유 타입을 정의한다.
 export const ROLE_IDS = [
+  "ceo",
   "service-planner",
   "researcher",
   "ui-ux-designer",

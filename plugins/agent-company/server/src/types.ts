@@ -1,5 +1,6 @@
 // Agent Company 런타임에서 공유하는 타입을 정의한다.
 export type RoleId =
+  | "ceo"
   | "service-planner"
   | "researcher"
   | "ui-ux-designer"

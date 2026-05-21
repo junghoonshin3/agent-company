@@ -2,7 +2,7 @@
 // Agent Company MCP 런타임을 터미널에서 제어하는 CLI다.
 import { AgentCompanyRuntime } from "./runtime.ts";
 import { isRoleId, isTaskType } from "./roles.ts";
-import type { RoleId, TaskType } from "./types.ts";
+import type { RiskLevel, RoleId, TaskType } from "./types.ts";
 
 const runtime = new AgentCompanyRuntime();
 const [, , command, ...args] = process.argv;
@@ -105,6 +105,23 @@ async function main(): Promise<void> {
           open_questions: parseList(openQuestionsArg),
           next_actions: parseList(nextActionsArg),
           discussion_id: discussionIdArg,
+        },
+        projectPath,
+      ));
+      return;
+    }
+    case "decision": {
+      const [projectPath, summary, rationale, riskLevelArg, discussionIdArg] = args;
+      if (!projectPath || !summary || !rationale || !riskLevelArg) {
+        usage();
+        process.exit(2);
+      }
+      print(await runtime.recordDecision(
+        {
+          summary,
+          rationale,
+          risk_level: parseRiskLevel(riskLevelArg),
+          discussion_id: parseOptionalArg(discussionIdArg),
         },
         projectPath,
       ));
@@ -283,6 +300,13 @@ function parseTaskType(value: string | undefined): TaskType | undefined {
   return value;
 }
 
+function parseRiskLevel(value: string): RiskLevel {
+  if (value === "low" || value === "medium" || value === "high") {
+    return value;
+  }
+  throw new Error(`Unknown risk_level: ${value}`);
+}
+
 function usage(): void {
   console.log(`Usage:
   companyctl start [project_path]
@@ -292,6 +316,7 @@ function usage(): void {
   companyctl task-status <project_path> <task_id> [preview_chars]
   companyctl collect <project_path> <task_id>
   companyctl meeting <project_path> <title> <participants_csv> <summary> [decisions] [open_questions] [next_actions] [discussion_id]
+  companyctl decision <project_path> <summary> <rationale> <risk_level> [discussion_id]
   companyctl discussion-start <project_path> <title> <question> <participants_csv> <context> <expected_decision>
   companyctl discussion-round <project_path> <discussion_id> <round> <task_ids> <summary>
   companyctl discussion-close <project_path> <discussion_id> <conclusion> <agreements> <disagreements> <decision> <next_actions> [meeting_id] [decision_id]

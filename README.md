@@ -1,13 +1,13 @@
 # Agent Company
 
-Agent Company는 Codex 안에서 작은 제품 회사를 로컬로 운영하기 위한 플러그인입니다. 사용자는 대표에게 목표만 전달하고, 대표는 `tmux`에 상주하는 Codex TUI 직원들을 역할별로 호출해 기획, 리서치, UI/UX, 아키텍처, 구현, QA, 릴리즈, 기록 관리를 조율합니다.
+Agent Company는 Codex 안에서 작은 제품 회사를 로컬로 운영하기 위한 플러그인입니다. 사용자는 현재 Codex 게이트웨이에 목표를 전달하고, 게이트웨이는 `tmux`에 상주하는 CEO Agent에게 요청을 넘깁니다. CEO Agent는 직원들을 역할별로 호출해 기획, 리서치, UI/UX, 아키텍처, 구현, QA, 릴리즈, 기록 관리를 조율합니다.
 
 이 레포는 Agent Company 플러그인만 독립적으로 담은 공개용 패키지입니다. 원래 실험용 작업공간에 있던 모바일 TODO 예제나 런타임 상태 파일은 포함하지 않습니다.
 
 ## 주요 기능
 
-- 대표 중심 워크플로우. 사용자는 개별 직원이 아니라 대표에게 목표를 전달합니다.
-- 역할 기반 직원 8명. 서비스 기획자, 리서처, UI/UX 디자이너, 아키텍트, 풀스택 개발자, QA 엔지니어, 릴리즈 매니저, 지식관리자가 분리되어 있습니다.
+- CEO 중심 워크플로우. 사용자는 개별 직원이 아니라 상주 CEO Agent에게 목표를 전달합니다.
+- 역할 기반 에이전트 9명. CEO, 서비스 기획자, 리서처, UI/UX 디자이너, 아키텍트, 풀스택 개발자, QA 엔지니어, 릴리즈 매니저, 지식관리자가 분리되어 있습니다.
 - `tmux` 기반 지속 세션. 각 직원은 별도 Codex TUI 세션으로 유지됩니다.
 - 파일 기반 업무 기록. `.agent-company/` 아래에 inbox, outbox, board, meeting, discussion, decision, peer message가 남습니다.
 - MCP 도구 제공. `start_company`, `delegate_task`, `wait_for_task`, `collect_result`, `record_meeting`, `send_peer_message` 등을 제공합니다.
@@ -46,7 +46,7 @@ Codex 세션을 새로 열고 다음처럼 사용자 메시지에서 스킬을 �
 $agent-company:company TODO 앱의 다음 기능을 기획하고 필요한 직원만 회의시켜줘
 ```
 
-스킬은 먼저 `start_company(project_path)`를 실행해 직원 사무실을 열고, 이어서 `company_status(project_path)`로 현재 상태와 대시보드 URL을 확인합니다.
+스킬은 먼저 `start_company(project_path)`를 실행해 CEO와 직원 사무실을 열고, 이어서 `company_status(project_path)`로 현재 상태와 대시보드 URL을 확인합니다. 사용자 작업은 기본적으로 `delegate_task(role: "ceo")`로 CEO에게 전달됩니다.
 
 ## 레포 구조
 
@@ -69,7 +69,7 @@ $agent-company:company TODO 앱의 다음 기능을 기획하고 필요한 직�
 
 | 경로 | 역할 |
 | --- | --- |
-| `plugins/agent-company/skills/company/SKILL.md` | 대표가 따르는 운영 절차와 승인 규칙입니다. |
+| `plugins/agent-company/skills/company/SKILL.md` | 게이트웨이가 CEO에게 요청을 전달하는 운영 절차와 승인 규칙입니다. |
 | `plugins/agent-company/server/src` | MCP 서버, 런타임, `tmux` 제어, 작업 파일 관리를 담당합니다. |
 | `plugins/agent-company/references/roles` | 직원별 역할 매뉴얼과 결과 템플릿입니다. |
 | `plugins/agent-company/references/protocols` | 승인, 라우팅, 회의, 산출물 계약, 작업 방식 프로토콜입니다. |
@@ -78,18 +78,18 @@ $agent-company:company TODO 앱의 다음 기능을 기획하고 필요한 직�
 
 ## 운영 모델
 
-Agent Company는 모든 직원을 무조건 부르지 않습니다. 대표는 먼저 목표를 분류하고, 가장 책임이 큰 소유 역할을 정한 뒤 필요한 지원 역할만 호출합니다.
+Agent Company는 모든 직원을 무조건 부르지 않습니다. 상주 CEO는 먼저 목표를 분류하고, 가장 책임이 큰 소유 역할을 정한 뒤 필요한 지원 역할만 호출합니다.
 
 일반적인 흐름은 다음과 같습니다.
 
-1. 사용자 목표를 역할 소유권 기준으로 분류합니다.
+1. 현재 Codex 게이트웨이가 사용자 목표를 CEO task로 전달합니다.
 2. `start_company`로 직원 사무실과 대시보드를 시작하거나 복구합니다.
-3. `delegate_task`로 필요한 직원에게 좁은 작업을 보냅니다.
-4. `wait_for_task` 또는 `task_status`로 결과를 확인합니다.
-5. `collect_result`로 `result.md`와 `done.json`을 읽습니다.
-6. 의미 있는 결론은 `record_meeting` 또는 `record_decision`으로 남깁니다.
-7. 구현이 필요하면 범위와 성공 기준이 명확한 뒤 풀스택 개발자에게 위임합니다.
-8. 위험이 있으면 QA와 릴리즈 담당자가 검증과 릴리즈 준비를 맡습니다.
+3. CEO가 `companyctl delegate`로 필요한 직원에게 좁은 작업을 보냅니다.
+4. CEO가 `companyctl wait`, `task-status`, `collect`로 결과를 확인합니다.
+5. 의미 있는 결론은 CEO가 `companyctl meeting` 또는 `companyctl decision`으로 남깁니다.
+6. 구현이 필요하면 범위와 성공 기준이 명확한 뒤 풀스택 개발자에게 위임합니다.
+7. 위험이 있으면 QA와 릴리즈 담당자가 검증과 릴리즈 준비를 맡습니다.
+8. CEO가 최종 `result.md`와 `done.json`을 작성하면 게이트웨이가 사용자에게 중계합니다.
 
 직원 간 직접 질문이 필요할 때는 `send_peer_message` 또는 `companyctl peer-message`를 사용합니다. 이 메시지는 board task가 아니라 `.agent-company/messages/`에 남는 파일 기반 대화입니다.
 
@@ -97,6 +97,7 @@ Agent Company는 모든 직원을 무조건 부르지 않습니다. 대표는 �
 
 | 역할 | 담당 범위 |
 | --- | --- |
+| CEO | 사용자 목표 해석, 프로세스 설계, 직원 위임, 결과 취합, 최종 보고입니다. |
 | 서비스 기획자 | 문제 정의, MVP 범위, 우선순위, 성공 기준입니다. |
 | 리서치 담당자 | 사용자 기대, 시장, 경쟁 제품, 기술 비교 근거입니다. |
 | UI/UX 디자이너 | 사용자 흐름, 화면 구조, 상호작용, 접근성입니다. |
@@ -122,7 +123,7 @@ Agent Company는 모든 직원을 무조건 부르지 않습니다. 대표는 �
 | `.agent-company/meetings/` | 회의록입니다. |
 | `.agent-company/discussions/` | 여러 라운드가 필요한 토론 기록입니다. |
 | `.agent-company/messages/` | 직원 간 직접 메시지입니다. |
-| `.agent-company/decisions.md` | 대표가 기록한 결정 로그입니다. |
+| `.agent-company/decisions.md` | CEO가 기록한 결정 로그입니다. |
 
 직원용 worktree는 대상 프로젝트 옆에 `.<repo-name>-agent-company-worktrees/` 형태로 생성됩니다.
 

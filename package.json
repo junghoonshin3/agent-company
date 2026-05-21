@@ -1,6 +1,6 @@
 {
   "name": "agent-company",
-  "version": "0.1.6",
+  "version": "0.1.8",
   "private": true,
   "type": "module",
   "description": "A local Codex plugin that runs a tmux-based product company with persistent worker agents and a read-only Kanban office dashboard.",

@@ -21,6 +21,7 @@ const requiredRoleSections = [
   "## 금지 사항",
 ];
 const roleRequirements = {
+  "ceo.md": ["## 프로세스 설계", "## 위임 현황", "## 결정과 근거", "## 사용자 보고"],
   "service-planner.md": ["## 문제 정의", "## 권장 범위", "## 성공 기준", "## 확인 질문"],
   "researcher.md": ["## 확인된 사실", "## 추정", "## 후보 평가", "## 리스크"],
   "ui-ux-designer.md": ["## 사용자 흐름", "## 화면 구조", "## 상호작용", "## 접근성"],
@@ -45,6 +46,7 @@ const requiredMcpTools = [
   "start_company",
   "company_status",
   "delegate_task",
+  "record_decision",
   "record_meeting",
   "start_discussion",
   "send_peer_message",
@@ -52,7 +54,7 @@ const requiredMcpTools = [
 
 const plugin = JSON.parse(await readFile(path.join(pluginRoot, ".codex-plugin", "plugin.json"), "utf8"));
 assert.equal(plugin.name, "agent-company");
-assert.equal(plugin.version, "0.1.7");
+assert.equal(plugin.version, "0.1.8");
 assert.equal(plugin.skills, "./skills/");
 assert.equal(plugin.mcpServers, "./.mcp.json");
 assert.equal(plugin.interface.displayName, "Agent Company");
@@ -89,6 +91,7 @@ assert.match(skill, /name: company/);
 assert.match(skill, /start_company/);
 assert.match(skill, /record_meeting/);
 assert.match(skill, /task_status/);
+assert.match(skill, /role: "ceo"/);
 assert.match(skill, /Role Routing/);
 assert.match(skill, /delegation-routing\.md/);
 assert.match(skill, /focused written review/);
@@ -105,7 +108,8 @@ assert.match(skill, /auto-start-error\.json/);
 assert.match(skill, /start-office\.sh/);
 assert.match(skill, /stop-office\.sh/);
 assert.match(skill, /--project-dir/);
-assert.match(skill, /do not use a short `wait_for_task` timeout as a failure signal/);
+assert.match(skill, /Wait for the CEO task/);
+assert.match(skill, /long wait such as 3600 seconds/);
 assert.match(skill, /repeated `task_status` checks/);
 
 const runtime = await readFile(path.join(pluginRoot, "server", "src", "runtime.ts"), "utf8");
@@ -199,6 +203,7 @@ assert.match(delegationRouting, /wait_for_task/);
 assert.match(delegationRouting, /풀스택 구현 작업에는 짧은 `wait_for_task` 시간을 실패 신호로 쓰지 않는다/);
 assert.match(delegationRouting, /반복적인 `task_status` 확인/);
 for (const roleTitle of [
+  "CEO",
   "서비스 기획자",
   "리서치 담당자",
   "UI\/UX 디자이너",

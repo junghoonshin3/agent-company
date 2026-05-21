@@ -13,6 +13,7 @@ const MIN_TOPIC_OVERLAP = 2;
 const PROJECT_TOPIC_TOKENS = new Set(["agent", "mobile", "office", "todo"]);
 
 const DEFAULT_ROLE_META: Record<RoleId, { title: string; windowName: string }> = {
+  ceo: { title: "CEO", windowName: "ceo" },
   "service-planner": { title: "서비스 기획자", windowName: "planner" },
   researcher: { title: "리서치 담당자", windowName: "research" },
   "ui-ux-designer": { title: "UI/UX 디자이너", windowName: "ui-ux" },

@@ -30,6 +30,7 @@ const KANBAN_FILTER_OPTIONS: { value: KanbanStatusFilter; label: string }[] = [
 ];
 
 const ROLE_LABELS: Record<RoleId, string> = {
+  ceo: "CEO",
   "service-planner": "서비스 기획자",
   researcher: "리서치 담당자",
   "ui-ux-designer": "UI/UX 디자이너",
