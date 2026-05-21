@@ -673,7 +673,8 @@ export class AgentCompanyRuntime {
 
   private async sendComposerMessage(target: string, message: string): Promise<void> {
     // Codex TUI can leave multi-line paste-buffer input in the composer without submitting.
-    await requireSuccessful(this.runner, "tmux", ["send-keys", "-t", target, "-l", message]);
+    const singleLineMessage = message.replace(/\s+/g, " ").trim();
+    await requireSuccessful(this.runner, "tmux", ["send-keys", "-t", target, "-l", singleLineMessage]);
     await requireSuccessful(this.runner, "tmux", ["send-keys", "-t", target, "Enter"]);
   }
 }
