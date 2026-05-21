@@ -559,6 +559,10 @@ test("taskStatus reports a delegated task without result files", async () => {
   const status = await runtime.taskStatus({ task_id: task.id }, dir);
 
   assert.equal(status.computedStatus, "delegated");
+  assert.equal(typeof status.elapsedMs, "number");
+  assert.equal(typeof status.updatedAgoMs, "number");
+  assert.ok(status.elapsedMs >= 0);
+  assert.ok(status.updatedAgoMs >= 0);
   assert.equal(status.files.doneExists, false);
   assert.equal(status.files.resultExists, false);
   assert.equal(status.resultPreview, undefined);
@@ -590,6 +594,8 @@ test("taskStatus previews blocked worker output without mutating board state", a
   const status = await runtime.taskStatus({ task_id: task.id, preview_chars: 12 }, dir);
 
   assert.equal(status.computedStatus, "blocked");
+  assert.equal(typeof status.elapsedMs, "number");
+  assert.equal(typeof status.updatedAgoMs, "number");
   assert.equal(status.files.doneExists, true);
   assert.equal(status.files.resultExists, true);
   assert.equal(status.summary, "Approval required");

@@ -97,6 +97,8 @@ export interface TaskStatusFiles {
 export interface TaskStatusResult {
   task: TaskRecord;
   computedStatus: TaskStatus;
+  elapsedMs: number;
+  updatedAgoMs: number;
   files: TaskStatusFiles;
   done?: unknown;
   doneError?: string;

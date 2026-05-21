@@ -30,3 +30,14 @@
 - If retries still leave the prompt visible, `delegateTask` fails through the existing dispatch failure path so the board does not sit indefinitely in `delegated`.
 - The verified source fix was copied to the active installed cache at `/Users/junghoon/.codex/plugins/cache/agentinc-local/agent-company/0.1.8/server/src/runtime.ts`.
 - Verification passed with `npm run check`, covering plugin validation, 34 server tests, Office typecheck, 16 Office tests, Office static validation, and Office build.
+
+## 2026-05-22 balanced delegation progress reporting
+
+- User chose a balanced operating model for slow CEO delegation: automatically select Fast, Standard, or Full based on risk instead of always doing broad meetings.
+- Confirmed scope is core flow only: gateway/CEO guidance, wait/status policy, and report templates. Office dashboard UI and existing record migrations are out of scope.
+- Interim progress report cadence is first report within 15 seconds, then every 45 seconds or whenever status changes.
+- Final report format should be standard and short: operating mode, participant table, decision, verification, remaining risk, and next action.
+- Implementation should preserve `wait_for_task` timeout behavior because it currently marks timed-out tasks failed; progress reporting should favor non-mutating `task_status` polling.
+- Implemented the policy in the gateway skill, CEO manual, delegation routing, and meeting protocol.
+- Added `elapsedMs` and `updatedAgoMs` to `task_status` responses so progress reports can include age information without mutating board state.
+- Verification passed with `npm test` and `npm run validate`.

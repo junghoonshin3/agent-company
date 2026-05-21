@@ -194,9 +194,12 @@ export class AgentCompanyRuntime {
     const doneExists = await exists(task.donePath);
     const resultBytes = resultExists ? (await fs.stat(task.resultPath)).size : undefined;
     const doneBytes = doneExists ? (await fs.stat(task.donePath)).size : undefined;
+    const now = Date.now();
     const result: TaskStatusResult = {
       task,
       computedStatus: task.status,
+      elapsedMs: elapsedMsSince(task.createdAt, now),
+      updatedAgoMs: elapsedMsSince(task.updatedAt, now),
       files: {
         resultExists,
         doneExists,
@@ -1332,6 +1335,14 @@ function waitPollIntervalMs(timeoutMs: number): number {
 function formatTimeoutSeconds(timeoutMs: number): string {
   const seconds = timeoutMs / 1000;
   return Number.isInteger(seconds) ? `${seconds}s` : `${seconds.toFixed(3)}s`;
+}
+
+function elapsedMsSince(isoTimestamp: string, nowMs: number): number {
+  const timestampMs = Date.parse(isoTimestamp);
+  if (Number.isNaN(timestampMs)) {
+    return 0;
+  }
+  return Math.max(0, nowMs - timestampMs);
 }
 
 function nowIso(): string {

@@ -108,9 +108,14 @@ assert.match(skill, /auto-start-error\.json/);
 assert.match(skill, /start-office\.sh/);
 assert.match(skill, /stop-office\.sh/);
 assert.match(skill, /--project-dir/);
-assert.match(skill, /Wait for the CEO task/);
-assert.match(skill, /long wait such as 3600 seconds/);
-assert.match(skill, /repeated `task_status` checks/);
+assert.match(skill, /Operating Modes/);
+assert.match(skill, /Fast/);
+assert.match(skill, /Standard/);
+assert.match(skill, /Full/);
+assert.match(skill, /within 15 seconds/);
+assert.match(skill, /every 45 seconds/);
+assert.match(skill, /Use `task_status` for non-mutating progress checks/);
+assert.match(skill, /operating mode, participant table, decision, verification, remaining risk, and next action/);
 
 const runtime = await readFile(path.join(pluginRoot, "server", "src", "runtime.ts"), "utf8");
 assert.match(runtime, /START_OFFICE_SCRIPT/);
@@ -125,6 +130,8 @@ const types = await readFile(path.join(pluginRoot, "server", "src", "types.ts"),
 assert.match(types, /officeDashboard: OfficeDashboardState/);
 assert.match(types, /OfficeDashboardStatus = "running" \| "stopped" \| "failed" \| "unknown"/);
 assert.match(types, /networkUrls\?: string\[\]/);
+assert.match(types, /elapsedMs: number/);
+assert.match(types, /updatedAgoMs: number/);
 
 const server = await readFile(path.join(pluginRoot, "server", "src", "mcp-server.ts"), "utf8");
 assert.match(server, /record_meeting/);
@@ -190,6 +197,10 @@ assert.match(meetingProtocol, /협업 역할/);
 assert.match(meetingProtocol, /기록·지식관리 담당자/);
 assert.match(meetingProtocol, /직원 직접 메시지/);
 assert.match(meetingProtocol, /회의 진행자와 최종 보고자/);
+assert.match(meetingProtocol, /Fast/);
+assert.match(meetingProtocol, /Standard/);
+assert.match(meetingProtocol, /Full/);
+assert.match(meetingProtocol, /최종 보고는 작업 모드, 참여 역할 표, 결정, 검증, 남은 리스크, 다음 액션/);
 
 const delegationRouting = await readFile(
   path.join(pluginRoot, "references", "protocols", "delegation-routing.md"),
@@ -202,6 +213,10 @@ assert.match(delegationRouting, /delegate_task/);
 assert.match(delegationRouting, /wait_for_task/);
 assert.match(delegationRouting, /풀스택 구현 작업에는 짧은 `wait_for_task` 시간을 실패 신호로 쓰지 않는다/);
 assert.match(delegationRouting, /반복적인 `task_status` 확인/);
+assert.match(delegationRouting, /진행 확인은 `task_status`를 우선한다/);
+assert.match(delegationRouting, /Fast는 낮은 위험/);
+assert.match(delegationRouting, /Standard는 일반적인 제품/);
+assert.match(delegationRouting, /Full은 큰 방향 전환/);
 for (const roleTitle of [
   "CEO",
   "서비스 기획자",

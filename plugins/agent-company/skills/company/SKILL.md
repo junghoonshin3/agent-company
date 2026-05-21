@@ -38,16 +38,26 @@ Use `references/protocols/delegation-routing.md` as the CEO's source of truth fo
 
 The CEO should not call every employee by default. When a decision crosses multiple role boundaries, the CEO asks only the owner and supporting roles for focused written review, then summarizes the result directly or through the knowledge manager.
 
+## Operating Modes
+
+Use balanced routing by default. Include the selected mode in the CEO task instructions and in the final user report.
+
+- Fast. Use for narrow, low-risk work. The CEO decides directly or calls only one owner role, records a brief decision when useful, and avoids discussion rounds unless blocked.
+- Standard. Use for normal product, implementation, or verification work. The CEO calls one owner role plus at most two supporting roles, prefers one meeting or one discussion round, then moves to implementation or final reporting.
+- Full. Use only for major direction changes, multi-domain risk, deployment, destructive deletion, credentials, cost, external publication, or unresolved disagreement. The CEO may call three or more roles and use multi-round discussions.
+
+Progress reporting cadence is part of the gateway contract. Send the first user-facing progress update within 15 seconds, then every 45 seconds or whenever status changes. Use `task_status` for non-mutating progress checks. Do not use a short `wait_for_task` timeout as a progress check, because timeout marks the task failed.
+
 ## Operating Model
 
 1. Start or recover the company with `start_company` at the beginning of Agent Company work, then inspect with `company_status`. This also starts or recovers the read-only Kanban/Dot Office dashboard.
 2. Create one CEO task with `delegate_task(role: "ceo", title, instructions, expected_output, task_type: "general")`.
-3. The CEO task instructions must include the user's goal, relevant project path or files, approval constraints, expected final report, and the rule that CEO should use `companyctl` to delegate to employees.
-4. Wait for the CEO task. Use a long wait such as 3600 seconds or repeated `task_status` checks, because the CEO may coordinate implementation and QA.
+3. The CEO task instructions must include the user's goal, relevant project path or files, approval constraints, selected operating mode, progress reporting expectations, expected final report, and the rule that CEO should use `companyctl` to delegate to employees.
+4. Monitor the CEO task with repeated `task_status` checks for progress updates. Use `wait_for_task` only when you are ready to wait for completion with an appropriate timeout for the selected mode.
 5. If the CEO returns `blocked`, relay the `needs` field as the exact approval or clarification request.
 6. If the CEO returns `failed`, collect and report the failure summary, validation errors, and any result preview.
 7. If the CEO completes, collect the CEO result and relay the final user-facing report without rewriting the decision.
-8. Keep the user informed with concise gateway-level status, blockers, and approval requests.
+8. Keep the user informed with concise gateway-level status, blockers, and approval requests using the 15 second then 45 second cadence.
 
 ## Approval Rules
 
@@ -91,6 +101,13 @@ Agent completion is accepted only when `done.json` is a valid object, `summary` 
 
 ## Output Style
 
-Report as the gateway. Relay the CEO's final report, including which roles participated, what came back, where employees agreed, where they disagreed, what the CEO recommends, what was recorded, and what is next. When asking for approval, state the exact action, why it matters, and the consequence of approving or rejecting it.
+Progress updates should use this compact shape.
+
+- Current step. CEO analysis, worker review, implementation, QA, or final synthesis.
+- Progress. Counts or roles completed, active, blocked, or failed.
+- Next check. When the next status check will happen.
+- Blocker. Only include when user input or approval is needed.
+
+Report as the gateway. Relay the CEO's final report in the standard format: operating mode, participant table, decision, verification, remaining risk, and next action. When asking for approval, state the exact action, why it matters, and the consequence of approving or rejecting it.
 
 Load references only when needed.

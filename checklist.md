@@ -28,3 +28,12 @@
 - [x] Apply the source fix to the active installed plugin cache.
 - [x] Run verification commands.
 - [x] Commit the logical change.
+
+## 2026-05-22 balanced delegation progress reporting
+
+- [x] Add balanced Fast/Standard/Full operating guidance to the gateway skill and CEO protocols.
+- [x] Standardize interim progress and final report formats.
+- [x] Add progress timing metadata to `task_status`.
+- [x] Add tests and validation checks for the new guidance and metadata.
+- [x] Run focused verification.
+- [x] Commit the logical change.
