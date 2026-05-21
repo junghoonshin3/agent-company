@@ -22,3 +22,11 @@
 - The runtime now sends task and peer-message notices as one-line composer strings with `tmux send-keys -l`, then sends `Enter`. The task file still contains the full structured instructions; the pane notice only needs to point the role at the file and outbox.
 - The same hotfix was applied to the installed cache at `/Users/junghoon/.codex/plugins/cache/agentinc-local/agent-company/0.1.8` because the active MCP server reads plugin code from that cache.
 - Source verification passed with `npm test` and `npm run validate`. Running the whole cache test file directly from the cache still fails in cache-layout-only CLI path tests that expect a repo-root `plugins/agent-company/...` prefix, but the edited runtime tests pass before those path-only failures and the source repo test suite is the authoritative verification.
+
+## 2026-05-21 tmux composer submit acknowledgement
+
+- User clarified that the worker prompts were still sitting in the Codex TUI composer until they manually pressed Enter. The prior single-line notice hotfix was insufficient because the runtime still treated `send-keys Enter` as fire-and-forget.
+- The runtime now submits with `C-m`, pauses briefly, inspects the pane, and retries when the task or peer-message notice still appears as an unhandled composer prompt.
+- If retries still leave the prompt visible, `delegateTask` fails through the existing dispatch failure path so the board does not sit indefinitely in `delegated`.
+- The verified source fix was copied to the active installed cache at `/Users/junghoon/.codex/plugins/cache/agentinc-local/agent-company/0.1.8/server/src/runtime.ts`.
+- Verification passed with `npm run check`, covering plugin validation, 34 server tests, Office typecheck, 16 Office tests, Office static validation, and Office build.

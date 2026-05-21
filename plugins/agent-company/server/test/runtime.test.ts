@@ -30,6 +30,7 @@ class FakeRunner implements CommandRunner {
   failOfficeStart = false;
   failOfficeStop = false;
   failTmuxSendLiteral = false;
+  composerCaptureResponses: string[] = [];
   throwOfficeStart = false;
   throwOfficeStop = false;
 
@@ -82,6 +83,9 @@ class FakeRunner implements CommandRunner {
     if (command === "tmux") {
       if (this.failTmuxSendLiteral && args[0] === "send-keys" && args.includes("-l")) {
         return fail("target pane did not accept literal task input");
+      }
+      if (args[0] === "capture-pane") {
+        return ok(this.composerCaptureResponses.shift() ?? "");
       }
       return ok();
     }
@@ -252,6 +256,17 @@ test("delegateTask writes inbox and sends a tmux message", async () => {
     call.args.includes("-l") &&
     call.args.includes(`${config.sessionName}:planner`)
   ));
+  assert.ok(runner.calls.some((call) =>
+    call.command === "tmux" &&
+    call.args[0] === "send-keys" &&
+    call.args.includes("C-m") &&
+    call.args.includes(`${config.sessionName}:planner`)
+  ));
+  assert.ok(runner.calls.some((call) =>
+    call.command === "tmux" &&
+    call.args[0] === "capture-pane" &&
+    call.args.includes(`${config.sessionName}:planner`)
+  ));
 
   const board = JSON.parse(await readFile(path.join(dir, ".agent-company", "board.json"), "utf8"));
   assert.equal(board.tasks[0].id, task.id);
@@ -288,6 +303,46 @@ test("delegateTask can send a user request to the persistent CEO", async () => {
     call.args.includes("-l") &&
     call.args.includes(`${config.sessionName}:ceo`)
   ));
+  assert.ok(runner.calls.some((call) =>
+    call.command === "tmux" &&
+    call.args[0] === "send-keys" &&
+    call.args.includes("C-m") &&
+    call.args.includes(`${config.sessionName}:ceo`)
+  ));
+
+  await cleanup(dir);
+});
+
+test("delegateTask retries composer submit when the prompt remains visible", async () => {
+  const { dir, runner } = await makeRuntime();
+  const runtime = new AgentCompanyRuntime(runner);
+  const config = await runtime.startCompany({ project_path: dir });
+  runner.composerCaptureResponses = [
+    "› 작업 배정: Draft retry scope. 작업 파일: /tmp/task.md.\n\n  gpt-5.5 xhigh fast\n",
+    "• 작업 파일을 읽고 범위를 확인하겠습니다.\n",
+  ];
+
+  const task = await runtime.delegateTask(
+    {
+      role: "service-planner",
+      title: "Draft retry scope",
+      instructions: "첫 제출이 composer에 남으면 재시도한다.",
+      expected_output: "Planning report.",
+    },
+    dir,
+  );
+
+  const submitCalls = runner.calls.filter((call) =>
+    call.command === "tmux" &&
+    call.args[0] === "send-keys" &&
+    call.args.includes("C-m") &&
+    call.args.includes(`${config.sessionName}:planner`)
+  );
+  assert.equal(submitCalls.length, 2);
+
+  const board = JSON.parse(await readFile(path.join(dir, ".agent-company", "board.json"), "utf8"));
+  assert.equal(board.tasks[0].id, task.id);
+  assert.equal(board.tasks[0].status, "delegated");
 
   await cleanup(dir);
 });
@@ -321,6 +376,43 @@ test("delegateTask marks task failed when tmux delivery fails", async () => {
   );
   assert.equal(persisted.status, "failed");
   assert.match(persisted.validationErrors.join("\n"), /target pane did not accept literal task input/);
+
+  await cleanup(dir);
+});
+
+test("delegateTask marks task failed when composer submit never acknowledges", async () => {
+  const { dir, runner } = await makeRuntime();
+  runner.composerCaptureResponses = [
+    "› 작업 배정: Draft stuck scope. 작업 파일: /tmp/task.md.\n\n  gpt-5.5 xhigh fast\n",
+    "› 작업 배정: Draft stuck scope. 작업 파일: /tmp/task.md.\n\n  gpt-5.5 xhigh fast\n",
+    "› 작업 배정: Draft stuck scope. 작업 파일: /tmp/task.md.\n\n  gpt-5.5 xhigh fast\n",
+  ];
+  const runtime = new AgentCompanyRuntime(runner);
+  await runtime.startCompany({ project_path: dir });
+
+  await assert.rejects(
+    runtime.delegateTask(
+      {
+        role: "service-planner",
+        title: "Draft stuck scope",
+        instructions: "제출 확인 실패 상태를 검증한다.",
+        expected_output: "Planning report.",
+      },
+      dir,
+    ),
+    /did not submit Codex TUI composer input/,
+  );
+
+  const board = JSON.parse(await readFile(path.join(dir, ".agent-company", "board.json"), "utf8"));
+  assert.equal(board.tasks.length, 1);
+  assert.equal(board.tasks[0].status, "failed");
+  assert.match(board.tasks[0].validationErrors.join("\n"), /Task dispatch failed/);
+
+  const persisted = JSON.parse(
+    await readFile(path.join(dir, ".agent-company", "tasks", `${board.tasks[0].id}.json`), "utf8"),
+  );
+  assert.equal(persisted.status, "failed");
+  assert.match(persisted.validationErrors.join("\n"), /did not submit Codex TUI composer input/);
 
   await cleanup(dir);
 });

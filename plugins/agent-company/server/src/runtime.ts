@@ -56,6 +56,8 @@ const SOURCE_DIR = path.dirname(fileURLToPath(import.meta.url));
 const PLUGIN_ROOT = path.resolve(SOURCE_DIR, "../..");
 const START_OFFICE_SCRIPT = path.join(PLUGIN_ROOT, "skills", "company", "scripts", "start-office.sh");
 const STOP_OFFICE_SCRIPT = path.join(PLUGIN_ROOT, "skills", "company", "scripts", "stop-office.sh");
+const COMPOSER_SUBMIT_ATTEMPTS = 3;
+const COMPOSER_SUBMIT_ACK_DELAY_MS = 250;
 
 export class AgentCompanyRuntime {
   private runner: CommandRunner;
@@ -672,11 +674,43 @@ export class AgentCompanyRuntime {
   }
 
   private async sendComposerMessage(target: string, message: string): Promise<void> {
-    // Codex TUI can leave multi-line paste-buffer input in the composer without submitting.
+    // Codex TUI can leave input in the composer without submitting, so verify after C-m.
     const singleLineMessage = message.replace(/\s+/g, " ").trim();
     await requireSuccessful(this.runner, "tmux", ["send-keys", "-t", target, "-l", singleLineMessage]);
-    await requireSuccessful(this.runner, "tmux", ["send-keys", "-t", target, "Enter"]);
+    for (let attempt = 1; attempt <= COMPOSER_SUBMIT_ATTEMPTS; attempt += 1) {
+      await requireSuccessful(this.runner, "tmux", ["send-keys", "-t", target, "C-m"]);
+      await sleep(COMPOSER_SUBMIT_ACK_DELAY_MS);
+      const pane = await requireSuccessful(this.runner, "tmux", ["capture-pane", "-t", target, "-p", "-S", "-20"]);
+      if (!composerPromptStillDraft(pane.stdout, singleLineMessage)) {
+        return;
+      }
+    }
+    throw new Error(`tmux dispatch did not submit Codex TUI composer input for ${target}`);
   }
+}
+
+function composerPromptStillDraft(paneText: string, message: string): boolean {
+  const promptMarker = message.startsWith("작업 배정:")
+    ? "작업 배정:"
+    : message.startsWith("동료 메시지:")
+      ? "동료 메시지:"
+      : message.slice(0, 24);
+  const lines = paneText.split(/\r?\n/);
+  const promptLineIndex = findLastIndex(lines, (line) => line.trimStart().startsWith("›") && line.includes(promptMarker));
+  if (promptLineIndex === -1) {
+    return false;
+  }
+  const afterPrompt = lines.slice(promptLineIndex + 1).join("\n");
+  return !/(^|\n)\s*[•✔✖⚠■]|Working \(/.test(afterPrompt);
+}
+
+function findLastIndex<T>(items: T[], predicate: (item: T) => boolean): number {
+  for (let index = items.length - 1; index >= 0; index -= 1) {
+    if (predicate(items[index])) {
+      return index;
+    }
+  }
+  return -1;
 }
 
 async function assertDirectory(dir: string): Promise<void> {

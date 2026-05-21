@@ -19,3 +19,12 @@
 - [x] Update dispatch failure tests for literal input delivery.
 - [x] Apply the same hotfix to the active plugin cache.
 - [x] Run source runtime tests and plugin validation.
+
+## 2026-05-21 tmux composer submit acknowledgement
+
+- [x] Replace `Enter` submit with `C-m` submit plus short acknowledgement checks.
+- [x] Fail task dispatch when the Codex TUI composer still shows the task prompt after retries.
+- [x] Add runtime tests for retry and stuck-composer failure.
+- [x] Apply the source fix to the active installed plugin cache.
+- [x] Run verification commands.
+- [x] Commit the logical change.
