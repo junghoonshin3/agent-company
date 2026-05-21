@@ -29,7 +29,7 @@ class FakeRunner implements CommandRunner {
   hasSession = false;
   failOfficeStart = false;
   failOfficeStop = false;
-  failTmuxPaste = false;
+  failTmuxSendLiteral = false;
   throwOfficeStart = false;
   throwOfficeStop = false;
 
@@ -80,8 +80,8 @@ class FakeRunner implements CommandRunner {
     }
 
     if (command === "tmux") {
-      if (this.failTmuxPaste && args[0] === "paste-buffer") {
-        return fail("target pane did not accept pasted task");
+      if (this.failTmuxSendLiteral && args[0] === "send-keys" && args.includes("-l")) {
+        return fail("target pane did not accept literal task input");
       }
       return ok();
     }
@@ -226,7 +226,7 @@ test("startCompany bootstraps each role with only its role reference and shared 
 test("delegateTask writes inbox and sends a tmux message", async () => {
   const { dir, runner } = await makeRuntime();
   const runtime = new AgentCompanyRuntime(runner);
-  await runtime.startCompany({ project_path: dir });
+  const config = await runtime.startCompany({ project_path: dir });
 
   const task = await runtime.delegateTask(
     {
@@ -246,7 +246,12 @@ test("delegateTask writes inbox and sends a tmux message", async () => {
   assert.match(inbox, /Applicable Playbook: references\/protocols\/task-playbooks\.md#planning/);
   assert.match(inbox, /Completion Contract/);
   assert.match(inbox, /## 문제 정의/);
-  assert.ok(runner.calls.some((call) => call.command === "tmux" && call.args[0] === "paste-buffer"));
+  assert.ok(runner.calls.some((call) =>
+    call.command === "tmux" &&
+    call.args[0] === "send-keys" &&
+    call.args.includes("-l") &&
+    call.args.includes(`${config.sessionName}:planner`)
+  ));
 
   const board = JSON.parse(await readFile(path.join(dir, ".agent-company", "board.json"), "utf8"));
   assert.equal(board.tasks[0].id, task.id);
@@ -279,7 +284,8 @@ test("delegateTask can send a user request to the persistent CEO", async () => {
   assert.match(inbox, /## 프로세스 설계/);
   assert.ok(runner.calls.some((call) =>
     call.command === "tmux" &&
-    call.args[0] === "paste-buffer" &&
+    call.args[0] === "send-keys" &&
+    call.args.includes("-l") &&
     call.args.includes(`${config.sessionName}:ceo`)
   ));
 
@@ -288,7 +294,7 @@ test("delegateTask can send a user request to the persistent CEO", async () => {
 
 test("delegateTask marks task failed when tmux delivery fails", async () => {
   const { dir, runner } = await makeRuntime();
-  runner.failTmuxPaste = true;
+  runner.failTmuxSendLiteral = true;
   const runtime = new AgentCompanyRuntime(runner);
   await runtime.startCompany({ project_path: dir });
 
@@ -302,7 +308,7 @@ test("delegateTask marks task failed when tmux delivery fails", async () => {
       },
       dir,
     ),
-    /target pane did not accept pasted task/,
+    /target pane did not accept literal task input/,
   );
 
   const board = JSON.parse(await readFile(path.join(dir, ".agent-company", "board.json"), "utf8"));
@@ -314,7 +320,7 @@ test("delegateTask marks task failed when tmux delivery fails", async () => {
     await readFile(path.join(dir, ".agent-company", "tasks", `${board.tasks[0].id}.json`), "utf8"),
   );
   assert.equal(persisted.status, "failed");
-  assert.match(persisted.validationErrors.join("\n"), /target pane did not accept pasted task/);
+  assert.match(persisted.validationErrors.join("\n"), /target pane did not accept literal task input/);
 
   await cleanup(dir);
 });
@@ -359,7 +365,10 @@ test("sendPeerMessage records a file-backed message and notifies the target role
 
   const target = `${config.sessionName}:architect`;
   assert.ok(runner.calls.some((call) =>
-    call.command === "tmux" && call.args[0] === "paste-buffer" && call.args.includes(target)
+    call.command === "tmux" &&
+    call.args[0] === "send-keys" &&
+    call.args.includes("-l") &&
+    call.args.includes(target)
   ));
 
   const status = await runtime.companyStatus(dir);

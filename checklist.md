@@ -10,3 +10,12 @@
 - [x] Rebuild Office dashboard assets.
 - [x] Run verification commands and fix failures.
 - [x] Commit the logical change.
+
+## 2026-05-21 tmux task dispatch reliability
+
+- [x] Reproduce the stuck state in the active CEO pane.
+- [x] Identify the dispatch path that leaves multi-line pasted text in Codex TUI composer.
+- [x] Replace multi-line `tmux paste-buffer` task notices with single-line literal `send-keys -l` composer input.
+- [x] Update dispatch failure tests for literal input delivery.
+- [x] Apply the same hotfix to the active plugin cache.
+- [x] Run source runtime tests and plugin validation.

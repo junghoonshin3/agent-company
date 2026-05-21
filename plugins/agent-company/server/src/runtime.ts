@@ -643,16 +643,13 @@ export class AgentCompanyRuntime {
   private async sendTaskToRole(config: CompanyConfig, role: RoleDefinition, task: TaskRecord): Promise<void> {
     const target = `${config.sessionName}:${role.windowName}`;
     const message = [
-      `작업 배정: ${task.title}`,
-      `작업 파일: ${task.inboxPath}`,
-      `결과 위치: ${task.outboxDir}`,
+      `작업 배정: ${task.title}.`,
+      `작업 파일: ${task.inboxPath}.`,
+      `결과 위치: ${task.outboxDir}.`,
       "작업 파일을 읽고 완료 시 result.md와 done.json을 작성하세요.",
       "역할 경계 밖 소스 수정은 하지 마세요.",
-    ].join("\n");
-    const bufferName = `agent-company-${task.id}`;
-    await requireSuccessful(this.runner, "tmux", ["set-buffer", "-b", bufferName, message]);
-    await requireSuccessful(this.runner, "tmux", ["paste-buffer", "-t", target, "-b", bufferName]);
-    await requireSuccessful(this.runner, "tmux", ["send-keys", "-t", target, "Enter"]);
+    ].join(" ");
+    await this.sendComposerMessage(target, message);
   }
 
   private async sendPeerMessageToRole(
@@ -663,17 +660,20 @@ export class AgentCompanyRuntime {
   ): Promise<void> {
     const target = `${config.sessionName}:${toRole.windowName}`;
     const notice = [
-      `동료 메시지: ${message.title}`,
-      `보낸 역할: ${fromRole.title} (${fromRole.id})`,
-      `메시지 파일: ${message.inboxPath}`,
-      ...(message.discussionId ? [`Discussion ID: ${message.discussionId}`] : []),
-      ...(message.taskId ? [`Task ID: ${message.taskId}`] : []),
-      ...(message.inReplyTo ? [`In Reply To: ${message.inReplyTo}`] : []),
+      `동료 메시지: ${message.title}.`,
+      `보낸 역할: ${fromRole.title} (${fromRole.id}).`,
+      `메시지 파일: ${message.inboxPath}.`,
+      ...(message.discussionId ? [`Discussion ID: ${message.discussionId}.`] : []),
+      ...(message.taskId ? [`Task ID: ${message.taskId}.`] : []),
+      ...(message.inReplyTo ? [`In Reply To: ${message.inReplyTo}.`] : []),
       "메시지 파일을 읽고 필요하면 companyctl peer-message로 답장하세요.",
-    ].join("\n");
-    const bufferName = `agent-company-peer-${message.id}`;
-    await requireSuccessful(this.runner, "tmux", ["set-buffer", "-b", bufferName, notice]);
-    await requireSuccessful(this.runner, "tmux", ["paste-buffer", "-t", target, "-b", bufferName]);
+    ].join(" ");
+    await this.sendComposerMessage(target, notice);
+  }
+
+  private async sendComposerMessage(target: string, message: string): Promise<void> {
+    // Codex TUI can leave multi-line paste-buffer input in the composer without submitting.
+    await requireSuccessful(this.runner, "tmux", ["send-keys", "-t", target, "-l", message]);
     await requireSuccessful(this.runner, "tmux", ["send-keys", "-t", target, "Enter"]);
   }
 }
