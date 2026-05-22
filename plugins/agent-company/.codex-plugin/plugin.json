@@ -1,7 +1,7 @@
 {
   "name": "agent-company",
-  "version": "0.1.8",
-  "description": "Run a tmux-based company with a persistent CEO agent and Codex worker agents.",
+  "version": "0.2.0",
+  "description": "Run a CEO-led product team with Codex sub-agents and a local discussion server.",
   "author": {
     "name": "AgentInc",
     "email": "agentinc@example.com",
@@ -12,16 +12,16 @@
   "license": "MIT",
   "keywords": [
     "codex",
-    "tmux",
     "multi-agent",
-    "mcp"
+    "mcp",
+    "discussion"
   ],
   "skills": "./skills/",
   "mcpServers": "./.mcp.json",
   "interface": {
     "displayName": "Agent Company",
-    "shortDescription": "Coordinate a tmux office of Codex agents.",
-    "longDescription": "Agent Company gives Codex a gateway workflow, a persistent tmux CEO agent, a TypeScript MCP control server, and tmux-based Codex TUI employees for product planning, research, design, architecture, implementation, QA, release, and knowledge management.",
+    "shortDescription": "Coordinate a CEO-led team of Codex sub-agents.",
+    "longDescription": "Agent Company turns the current Codex session into a CEO that plans with the user, starts selected Codex sub-agent employees, lets them discuss through a project-local HTTP meeting server, and records consensus, decisions, verification, risks, and next actions.",
     "developerName": "AgentInc",
     "category": "Productivity",
     "capabilities": [
@@ -33,9 +33,9 @@
     "privacyPolicyURL": "https://example.com/privacy",
     "termsOfServiceURL": "https://example.com/terms",
     "defaultPrompt": [
-      "Agent Company로 이 프로젝트의 제품팀을 열어줘.",
-      "상주 CEO Agent로 이 기능을 기획하고 직원 토론을 취합해줘.",
-      "현재 회사 작업 현황을 요약해줘."
+      "Agent Company CEO로 이 작업 계획을 먼저 세워줘.",
+      "필요한 직원 에이전트를 골라 회의를 진행해줘.",
+      "현재 v2 회의와 결정 상태를 요약해줘."
     ],
     "brandColor": "#2563EB"
   }

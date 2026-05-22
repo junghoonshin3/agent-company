@@ -41,3 +41,20 @@
 - Implemented the policy in the gateway skill, CEO manual, delegation routing, and meeting protocol.
 - Added `elapsedMs` and `updatedAgoMs` to `task_status` responses so progress reports can include age information without mutating board state.
 - Verification passed with `npm test` and `npm run validate`.
+
+## 2026-05-22 Agent Company v2 core runtime redesign
+
+- Deep interview reset the product direction away from the current gateway -> tmux CEO -> tmux workers model.
+- v2 default is plugin CEO behavior in the current Codex session. The visible actor should be CEO, not gateway.
+- Worker execution should use Codex native sub-agents. The local environment has `codex-cli 0.133.0` and `multi_agent stable true`, but v2 should document feature availability rather than claim an exact minimum version.
+- Direct worker discussion should be implemented through a project-local discussion server. Workers read and post messages directly through HTTP, while CEO observes and summarizes.
+- The discussion server should be project-persistent, not per-task temporary, and should bind to `127.0.0.1` by default.
+- Records should be minimal. Keep meeting logs, worker results, decisions, consensus state, and final reports under `.agent-company/v2`.
+- Existing `.agent-company` v1 records should remain read-only legacy data. Do not migrate or delete them.
+- Code edits by worker agents should be patch proposals from separate agent workspaces, reviewed and integrated by CEO.
+- The first implementation milestone is the core runtime only. The old Office/Kanban UI should be removed now, and a v2 meeting view can be built later.
+- Implemented v2 under `.agent-company/v2` with JSON config, JSONL decisions, per-meeting metadata, per-meeting messages, and server metadata.
+- The MCP surface is now `start_company`, `company_status`, `create_meeting`, `meeting_status`, `post_message`, `close_meeting`, `record_decision`, and `stop_company`.
+- `create_meeting` returns HTTP connection details including URL, meeting URL, messages URL, token header, and token so employee sub-agents can read and post directly.
+- Removed tmux scripts, `companyctl`, tmux runtime dispatch, worktree creation, Office server, Office UI source, Office dist assets, and Office package scripts.
+- Verification passed with `npm run validate`, `npm test` with local bind approval, `npm run check` with local bind approval, and `git diff --check`.

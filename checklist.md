@@ -37,3 +37,15 @@
 - [x] Add tests and validation checks for the new guidance and metadata.
 - [x] Run focused verification.
 - [x] Commit the logical change.
+
+## 2026-05-22 Agent Company v2 core runtime redesign
+
+- [x] Record the implementation plan, checklist, and context notes.
+- [x] Replace tmux/worktree runtime types with v2 company, meeting, message, decision, and server types.
+- [x] Implement the project-local discussion server and v2 runtime state flow.
+- [x] Replace the MCP surface with v2 tools.
+- [x] Rewrite the company skill, README, manifest, validation, and role/protocol guidance for CEO Plan Mode.
+- [x] Remove tmux scripts, companyctl, Office UI, and Office package scripts.
+- [x] Update runtime tests for v2 startup, auth, meeting messages, consensus, decisions, status, and shutdown.
+- [x] Run verification commands and fix failures.
+- [x] Commit the logical change.

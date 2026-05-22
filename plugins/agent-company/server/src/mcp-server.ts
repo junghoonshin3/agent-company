@@ -1,5 +1,5 @@
-// Agent Company MCP 도구를 JSON-RPC stdio 서버로 노출한다.
-import { ROLE_DEFINITIONS, TASK_TYPES } from "./roles.ts";
+// Agent Company v2 MCP 도구를 JSON-RPC stdio 서버로 노출한다.
+import { ROLE_DEFINITIONS } from "./roles.ts";
 import { AgentCompanyRuntime } from "./runtime.ts";
 
 interface JsonRpcRequest {
@@ -44,7 +44,7 @@ async function handleRequest(request: JsonRpcRequest): Promise<void> {
       writeResponse(request.id, {
         protocolVersion: request.params?.protocolVersion ?? "2024-11-05",
         capabilities: { tools: {} },
-        serverInfo: { name: "agent-company", version: "0.1.7" },
+        serverInfo: { name: "agent-company", version: "0.2.0" },
       });
       return;
     }
@@ -82,26 +82,16 @@ async function callTool(name: string, args: any): Promise<unknown> {
     }
     case "company_status":
       return runtime.companyStatus(projectPath(args));
-    case "delegate_task":
-      return runtime.delegateTask(args, projectPath(args));
-    case "wait_for_task":
-      return runtime.waitForTask(args, projectPath(args));
-    case "task_status":
-      return runtime.taskStatus(args, projectPath(args));
-    case "collect_result":
-      return runtime.collectResult(args, projectPath(args));
+    case "create_meeting":
+      return runtime.createMeeting(args, projectPath(args));
+    case "meeting_status":
+      return runtime.meetingStatus(args, projectPath(args));
+    case "post_message":
+      return runtime.postMessage(args, projectPath(args));
+    case "close_meeting":
+      return runtime.closeMeeting(args, projectPath(args));
     case "record_decision":
       return runtime.recordDecision(args, projectPath(args));
-    case "record_meeting":
-      return runtime.recordMeeting(args, projectPath(args));
-    case "start_discussion":
-      return runtime.startDiscussion(args, projectPath(args));
-    case "append_discussion_round":
-      return runtime.appendDiscussionRound(args, projectPath(args));
-    case "close_discussion":
-      return runtime.closeDiscussion(args, projectPath(args));
-    case "send_peer_message":
-      return runtime.sendPeerMessage(args, projectPath(args));
     case "stop_company": {
       const result = await runtime.stopCompany(projectPath(args));
       activeProjectPath = undefined;
@@ -147,10 +137,14 @@ function writeLog(message: string): void {
   process.stderr.write(`${message}\n`);
 }
 
+const ROLE_ENUM = ROLE_DEFINITIONS.map((role) => role.id);
+const MESSAGE_KIND_ENUM = ["statement", "reply", "consensus", "question", "result", "system"];
+const CONSENSUS_POSITION_ENUM = ["agree", "conditional", "disagree", "needs-user"];
+
 const TOOL_DEFINITIONS = [
   {
     name: "start_company",
-    description: "Start the tmux-based Agent Company office for a project path.",
+    description: "Initialize Agent Company v2 state and start the project-local discussion server.",
     inputSchema: {
       type: "object",
       properties: {
@@ -161,7 +155,7 @@ const TOOL_DEFINITIONS = [
   },
   {
     name: "company_status",
-    description: "Read the Agent Company config, board, recent meetings, recent discussions, recent peer messages, and tmux session name.",
+    description: "Read Agent Company v2 config, server state, active meetings, recent decisions, and legacy state metadata.",
     inputSchema: {
       type: "object",
       properties: {
@@ -170,192 +164,83 @@ const TOOL_DEFINITIONS = [
     },
   },
   {
-    name: "delegate_task",
-    description: "Create an inbox task and send it to a tmux worker role.",
+    name: "create_meeting",
+    description: "Create a v2 employee discussion meeting with explicit participants and a consensus policy.",
     inputSchema: {
       type: "object",
       properties: {
         project_path: { type: "string" },
-        role: {
-          type: "string",
-          enum: ROLE_DEFINITIONS.map((role) => role.id),
-        },
         title: { type: "string" },
-        instructions: { type: "string" },
-        expected_output: { type: "string" },
-        task_type: { type: "string", enum: TASK_TYPES },
+        goal: { type: "string" },
+        participants: { type: "array", items: { type: "string", enum: ROLE_ENUM } },
+        consensus_policy: { type: "string" },
       },
-      required: ["role", "title", "instructions", "expected_output"],
+      required: ["title", "goal", "participants"],
     },
   },
   {
-    name: "wait_for_task",
-    description: "Wait until a worker writes done.json for a task.",
+    name: "meeting_status",
+    description: "Read a meeting, messages after an optional sequence, and the current consensus snapshot.",
     inputSchema: {
       type: "object",
       properties: {
         project_path: { type: "string" },
-        task_id: { type: "string" },
-        timeout_sec: { type: "number" },
+        meeting_id: { type: "string" },
+        after_sequence: { type: "number" },
       },
-      required: ["task_id"],
+      required: ["meeting_id"],
     },
   },
   {
-    name: "task_status",
-    description: "Inspect one delegated task without mutating board state.",
+    name: "post_message",
+    description: "Append a CEO or employee message to a v2 meeting.",
     inputSchema: {
       type: "object",
       properties: {
         project_path: { type: "string" },
-        task_id: { type: "string" },
-        preview_chars: { type: "number" },
+        meeting_id: { type: "string" },
+        role: { type: "string", enum: ROLE_ENUM },
+        kind: { type: "string", enum: MESSAGE_KIND_ENUM },
+        message: { type: "string" },
+        position: { type: "string", enum: CONSENSUS_POSITION_ENUM },
       },
-      required: ["task_id"],
+      required: ["meeting_id", "role", "message"],
     },
   },
   {
-    name: "collect_result",
-    description: "Read result.md and done.json for a completed worker task.",
+    name: "close_meeting",
+    description: "Close a meeting with the CEO summary, consensus statement, unresolved questions, and next actions.",
     inputSchema: {
       type: "object",
       properties: {
         project_path: { type: "string" },
-        task_id: { type: "string" },
+        meeting_id: { type: "string" },
+        summary: { type: "string" },
+        consensus: { type: "string" },
+        unresolved_questions: { type: "array", items: { type: "string" } },
+        next_actions: { type: "array", items: { type: "string" } },
       },
-      required: ["task_id"],
+      required: ["meeting_id", "summary", "consensus"],
     },
   },
   {
     name: "record_decision",
-    description: "Append a CEO decision to .agent-company/decisions.md.",
+    description: "Record a CEO decision under .agent-company/v2/decisions.jsonl.",
     inputSchema: {
       type: "object",
       properties: {
         project_path: { type: "string" },
+        meeting_id: { type: "string" },
         summary: { type: "string" },
         rationale: { type: "string" },
         risk_level: { type: "string", enum: ["low", "medium", "high"] },
-        discussion_id: { type: "string" },
       },
       required: ["summary", "rationale", "risk_level"],
     },
   },
   {
-    name: "record_meeting",
-    description: "Write meeting notes to .agent-company/meetings/ and return the saved note metadata.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        project_path: { type: "string" },
-        title: { type: "string" },
-        participants: {
-          type: "array",
-          items: {
-            type: "string",
-            enum: ROLE_DEFINITIONS.map((role) => role.id),
-          },
-        },
-        summary: { type: "string" },
-        decisions: { type: "array", items: { type: "string" } },
-        open_questions: { type: "array", items: { type: "string" } },
-        next_actions: { type: "array", items: { type: "string" } },
-        discussion_id: { type: "string" },
-      },
-      required: ["title", "participants", "summary", "decisions", "open_questions", "next_actions"],
-    },
-  },
-  {
-    name: "start_discussion",
-    description: "Create a file-backed discussion record for an important CEO decision.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        project_path: { type: "string" },
-        title: { type: "string" },
-        question: { type: "string" },
-        participants: {
-          type: "array",
-          items: {
-            type: "string",
-            enum: ROLE_DEFINITIONS.map((role) => role.id),
-          },
-        },
-        context: { type: "string" },
-        expected_decision: { type: "string" },
-      },
-      required: ["title", "question", "participants", "context", "expected_decision"],
-    },
-  },
-  {
-    name: "append_discussion_round",
-    description: "Append one discussion round summary to a discussion record.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        project_path: { type: "string" },
-        discussion_id: { type: "string" },
-        round: {
-          anyOf: [
-            { type: "number", enum: [1, 2, 3] },
-            {
-              type: "string",
-              enum: ["1", "2", "3", "round1", "round2", "round3"],
-            },
-          ],
-        },
-        task_ids: { type: "array", items: { type: "string" } },
-        summary: { type: "string" },
-      },
-      required: ["discussion_id", "round", "task_ids", "summary"],
-    },
-  },
-  {
-    name: "close_discussion",
-    description: "Close a discussion with the CEO conclusion, agreements, disagreements, decision, and next actions.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        project_path: { type: "string" },
-        discussion_id: { type: "string" },
-        conclusion: { type: "string" },
-        agreements: { type: "array", items: { type: "string" } },
-        disagreements: { type: "array", items: { type: "string" } },
-        decision: { type: "string" },
-        next_actions: { type: "array", items: { type: "string" } },
-        meeting_id: { type: "string" },
-        decision_id: { type: "string" },
-      },
-      required: ["discussion_id", "conclusion", "agreements", "disagreements", "decision", "next_actions"],
-    },
-  },
-  {
-    name: "send_peer_message",
-    description: "Send a file-backed peer message from one Agent Company role to another role.",
-    inputSchema: {
-      type: "object",
-      properties: {
-        project_path: { type: "string" },
-        from_role: {
-          type: "string",
-          enum: ROLE_DEFINITIONS.map((role) => role.id),
-        },
-        to_role: {
-          type: "string",
-          enum: ROLE_DEFINITIONS.map((role) => role.id),
-        },
-        title: { type: "string" },
-        message: { type: "string" },
-        discussion_id: { type: "string" },
-        task_id: { type: "string" },
-        in_reply_to: { type: "string" },
-      },
-      required: ["from_role", "to_role", "title", "message"],
-    },
-  },
-  {
     name: "stop_company",
-    description: "Stop the tmux session for this Agent Company.",
+    description: "Stop the Agent Company v2 discussion server for the active project.",
     inputSchema: {
       type: "object",
       properties: {

@@ -1,5 +1,0 @@
-#!/bin/sh
-# Agent Company 플러그인 루트의 TypeScript CLI를 실행한다.
-SCRIPT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
-PLUGIN_ROOT=$(CDPATH= cd -- "$SCRIPT_DIR/../../.." && pwd)
-exec node --experimental-strip-types "$PLUGIN_ROOT/server/src/companyctl.ts" "$@"

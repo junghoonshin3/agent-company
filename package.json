@@ -1,36 +1,15 @@
 {
   "name": "agent-company",
-  "version": "0.1.8",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
-  "description": "A local Codex plugin that runs a tmux-based product company with persistent worker agents and a read-only Kanban office dashboard.",
+  "description": "A local Codex plugin that runs a CEO-led product team with Codex sub-agents and a project-local discussion server.",
   "engines": {
     "node": ">=22.12"
   },
   "scripts": {
     "test": "node --experimental-strip-types --test plugins/agent-company/server/test/*.test.ts",
-    "dev:agent-office": "vite --host 127.0.0.1 plugins/agent-company/office",
-    "build:agent-office": "vite build plugins/agent-company/office",
-    "typecheck:agent-office": "tsc -p plugins/agent-company/office/tsconfig.json --noEmit",
-    "test:agent-office:unit": "vitest run --root plugins/agent-company/office --config vite.config.ts",
-    "test:agent-office": "npm run typecheck:agent-office && npm run test:agent-office:unit && node plugins/agent-company/office/validate.mjs",
     "validate": "node plugins/agent-company/scripts/validate-plugin.mjs",
-    "check": "npm run validate && npm test && npm run test:agent-office && npm run build:agent-office"
-  },
-  "dependencies": {
-    "react": "^19.2.6",
-    "react-dom": "^19.2.6"
-  },
-  "devDependencies": {
-    "@testing-library/react": "^16.3.2",
-    "@testing-library/user-event": "^14.6.1",
-    "@types/node": "^25.9.0",
-    "@types/react": "^19.2.14",
-    "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^6.0.2",
-    "jsdom": "^29.1.1",
-    "typescript": "^6.0.3",
-    "vite": "^8.0.13",
-    "vitest": "^4.1.6"
+    "check": "npm run validate && npm test"
   }
 }
