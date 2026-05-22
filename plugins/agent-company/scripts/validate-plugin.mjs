@@ -62,6 +62,9 @@ assert.match(skill, /Codex native sub-agents/);
 assert.match(skill, /Spawn all selected employee sub-agents before waiting/);
 assert.match(skill, /spawn-wait-spawn sequence/);
 assert.match(skill, /multi-target wait/);
+assert.match(skill, /Responsible Role Selection/);
+assert.match(skill, /owned requirement/);
+assert.match(skill, /Do not invite roles for general review/);
 assert.match(skill, /create_meeting/);
 assert.match(skill, /meeting_status/);
 assert.match(skill, /post_message/);
@@ -106,6 +109,23 @@ const readme = await readFile(path.join(pluginRoot, "README.md"), "utf8");
 assert.match(readme, /Codex native sub-agents/);
 assert.match(readme, /\.agent-company\/v2/);
 assert.match(readme, /The old tmux task tools were removed in v2/);
+
+const rootReadme = await readFile(path.join(root, "README.md"), "utf8");
+assert.match(rootReadme, /참여 역할별 담당 요구사항/);
+assert.match(rootReadme, /책임 역할만 호출/);
+
+const delegationRouting = await readFile(
+  path.join(pluginRoot, "references", "protocols", "delegation-routing.md"),
+  "utf8",
+);
+assert.match(delegationRouting, /요구사항 책임 소유자 기반의 최소 조합/);
+assert.match(delegationRouting, /역할 소유권 표를 참가자 선택 기준으로 사용한다/);
+assert.match(delegationRouting, /관성적 전체 호출/);
+assert.match(delegationRouting, /CEO 단독 처리 불가 이유/);
+
+const ceoRole = await readFile(path.join(pluginRoot, "references", "roles", "ceo.md"), "utf8");
+assert.match(ceoRole, /요구사항 책임 소유자 기반의 최소 조합/);
+assert.match(ceoRole, /단순 참고나 관성적 검토/);
 
 const roleFiles = await readdir(path.join(pluginRoot, "references", "roles"));
 for (const fileName of roleFiles.filter((file) => file.endsWith(".md"))) {

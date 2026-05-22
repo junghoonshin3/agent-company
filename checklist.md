@@ -75,3 +75,14 @@
 - [x] Remove root README content that explains non-v2 behavior or legacy exclusions.
 - [x] Run documentation/runtime validation.
 - [x] Commit the logical change.
+
+## 2026-05-22 responsible role meeting selection
+
+- [x] Inspect CEO skill, delegation routing, CEO role manual, README, and validation script.
+- [x] Record the implementation plan, checklist, and context notes.
+- [x] Add responsible role selection guidance to the CEO skill.
+- [x] Update delegation and CEO role protocols with the same participant criteria.
+- [x] Reflect the participant criteria in the root README.
+- [x] Add validation coverage for the new guidance.
+- [x] Run verification commands and fix failures.
+- [x] Commit the logical change.

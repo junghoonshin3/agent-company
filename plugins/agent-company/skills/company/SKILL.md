@@ -25,7 +25,7 @@ The plan must include:
 
 - Goal and success criteria.
 - Included and excluded scope.
-- Selected employee roles and why each is needed.
+- Requirement-to-role mapping for each selected employee, including the owned requirement and why the CEO should not handle it alone.
 - Meeting style and consensus policy.
 - Expected outputs.
 - Verification plan.
@@ -44,7 +44,16 @@ Do not call `start_company`, create a meeting, spawn employees, post discussion 
 - 릴리즈 담당자. Release readiness, rollout notes, rollback risk.
 - 기록·지식관리 담당자. Decisions, meeting notes, open questions, next actions.
 
-Call only the roles needed for the approved plan.
+## Responsible Role Selection
+
+- Split the user request into concrete requirements before selecting participants.
+- Select only roles that own a requirement or a material risk that the CEO should not handle alone.
+- Use the role ownership rules in `references/protocols/delegation-routing.md` as the participant selection source of truth.
+- For each selected role, state its owned requirement or risk, why CEO-only handling is insufficient, and the expected output.
+- Do not invite roles for general review, possible opinions, broad coverage, or habit.
+- QA, release, and knowledge roles may be selected by CEO judgment only when their owned regression, rollout, or continuity risk is material and stated in the plan.
+
+Call only the responsible roles needed for the approved plan.
 
 ## Approved Execution Flow
 

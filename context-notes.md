@@ -84,3 +84,13 @@
 - The root README is already v2-oriented, so the cleanup should remove historical exclusions and legacy/v1 handling notes rather than rewrite the document.
 - Removed the root README's tmux/worktree/Kanban/Office exclusion sentence, v1 legacy runtime sentence, and `company_status` legacy wording.
 - Verification passed with no stale keyword matches in root README, `npm run validate`, and `git diff --check`.
+
+## 2026-05-22 responsible role meeting selection
+
+- User wants the CEO agent to include only agents responsible for the user's requirements in meetings.
+- Plan is documentation and validation only. Do not change MCP APIs, meeting schemas, or `create_meeting(participants)`.
+- Participant selection should be based on requirement responsibility, not broad consultation. Each selected role needs a requirement ownership reason and a reason the CEO should not handle it alone.
+- QA, release, and knowledge roles may still be selected by CEO judgment when their owned risk is material, but the plan must state that risk.
+- Active plugin cache should not be edited as part of this change.
+- Implemented the policy in the CEO skill, delegation routing protocol, CEO role manual, root README, and validation script.
+- Verification passed with `npm run validate`, `git diff --check`, and `npm test` after rerunning with local bind approval. The first sandboxed `npm test` failed on `listen EPERM` for `127.0.0.1`.
