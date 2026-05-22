@@ -52,10 +52,10 @@ After user approval:
 
 1. Call `start_company(project_path)` to initialize `.agent-company/v2` and start the local discussion server.
 2. Call `create_meeting(title, goal, participants, consensus_policy)` for the selected employees.
-3. Spawn the selected employees as Codex native sub-agents.
+3. Spawn all selected employee sub-agents before waiting for any single employee result. Do not run employees in a spawn-wait-spawn sequence unless the later employee explicitly depends on the earlier result.
 4. Give each employee its role, meeting goal, server `messagesUrl`, `tokenHeader`, `token`, expected output, and consensus rules.
-5. Employees read and post directly through the local HTTP meeting API.
-6. Monitor with `meeting_status`; summarize only after reading actual employee messages.
+5. Employees work concurrently, read and post directly through the local HTTP meeting API, and respond to existing meeting messages when useful.
+6. Monitor all spawned employees together with `meeting_status` and, when available, a multi-target wait. Summarize only after reading actual employee messages.
 7. If all required employees post `agree` or `conditional`, close the meeting with `close_meeting`.
 8. If a material disagreement remains, stop and ask the user with the competing options and evidence.
 9. Record important CEO decisions with `record_decision`.

@@ -59,6 +59,9 @@ const skill = await readFile(path.join(pluginRoot, "skills", "company", "SKILL.m
 assert.match(skill, /CEO Plan Mode/);
 assert.match(skill, /Do not describe yourself as a gateway/);
 assert.match(skill, /Codex native sub-agents/);
+assert.match(skill, /Spawn all selected employee sub-agents before waiting/);
+assert.match(skill, /spawn-wait-spawn sequence/);
+assert.match(skill, /multi-target wait/);
 assert.match(skill, /create_meeting/);
 assert.match(skill, /meeting_status/);
 assert.match(skill, /post_message/);

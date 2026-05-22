@@ -58,3 +58,10 @@
 - `create_meeting` returns HTTP connection details including URL, meeting URL, messages URL, token header, and token so employee sub-agents can read and post directly.
 - Removed tmux scripts, `companyctl`, tmux runtime dispatch, worktree creation, Office server, Office UI source, Office dist assets, and Office package scripts.
 - Verification passed with `npm run validate`, `npm test` with local bind approval, `npm run check` with local bind approval, and `git diff --check`.
+
+## 2026-05-22 parallel employee spawn guidance
+
+- User noticed employee sub-agents were effectively handled sequentially because the v2 skill only said to spawn selected employees, without saying to spawn all employees before waiting.
+- The intended default is parallel execution: after `create_meeting`, CEO should start all selected employee sub-agents first, then monitor meeting messages and available multi-target waits together.
+- Sequential execution remains allowed only when a later employee explicitly depends on an earlier result.
+- Verification passed with `npm run validate` and `npm test` after rerunning `npm test` with local bind approval. The first sandboxed `npm test` failed because `127.0.0.1` listen returned `EPERM`.

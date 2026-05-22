@@ -49,3 +49,11 @@
 - [x] Update runtime tests for v2 startup, auth, meeting messages, consensus, decisions, status, and shutdown.
 - [x] Run verification commands and fix failures.
 - [x] Commit the logical change.
+
+## 2026-05-22 parallel employee spawn guidance
+
+- [x] Record the implementation plan, checklist, and context notes.
+- [x] Update the company skill so selected employees are spawned before waiting on any one employee.
+- [x] Add validation coverage for the parallel spawn guidance.
+- [x] Run focused verification.
+- [x] Commit the logical change.
