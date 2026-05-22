@@ -57,3 +57,13 @@
 - [x] Add validation coverage for the parallel spawn guidance.
 - [x] Run focused verification.
 - [x] Commit the logical change.
+
+## 2026-05-22 branch cleanup and README refresh
+
+- [x] Inspect current branches, remote branches, worktrees, and README state.
+- [x] Record the implementation plan, checklist, and context notes.
+- [x] Rewrite root README for Agent Company v2.
+- [x] Remove main-external local worktrees and branches.
+- [x] Remove main-external remote branches.
+- [x] Run verification.
+- [x] Commit and push the logical change.

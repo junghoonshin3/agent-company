@@ -65,3 +65,14 @@
 - The intended default is parallel execution: after `create_meeting`, CEO should start all selected employee sub-agents first, then monitor meeting messages and available multi-target waits together.
 - Sequential execution remains allowed only when a later employee explicitly depends on an earlier result.
 - Verification passed with `npm run validate` and `npm test` after rerunning `npm test` with local bind approval. The first sandboxed `npm test` failed because `127.0.0.1` listen returned `EPERM`.
+
+## 2026-05-22 branch cleanup and README refresh
+
+- User explicitly asked to remove every branch except main, rewrite README.md, commit, and push.
+- Current main and origin/main both point at `646c6a9` before this work.
+- Local main-external branches include old Agent Company role branches plus `develop`, feature branches, and `fix/implementation-wait-policy-0.1.7`.
+- Remote main-external branches are `origin/develop` and `origin/fix/implementation-wait-policy-0.1.7`.
+- Root README is stale v1 documentation that still describes tmux, Office dashboard, and delegate_task tooling. It should be replaced with v2 Codex native sub-agent and local discussion server documentation.
+- Removed role worktrees with `git worktree remove --force` after confirming the user wanted all non-main branches removed. Most role worktrees had stale `.agents/plugins/marketplace.json` and `.DS_Store` changes that were discarded with the worktree removal.
+- Deleted all local branches except `main`, then deleted remote branches `origin/develop` and `origin/fix/implementation-wait-policy-0.1.7`.
+- Verification passed with `npm run validate`, `npm test` with local bind approval, and `git diff --check`.

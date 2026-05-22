@@ -28,3 +28,24 @@ Agent Company v2는 현재 Codex 세션이 CEO처럼 행동하고, 필요한 Cod
 - `npm test`
 - `npm run check`
 - `git diff --check`
+
+## 2026-05-22 Branch Cleanup and README Refresh Plan
+
+### Summary
+
+main만 유지하고 나머지 로컬·원격 브랜치와 역할별 worktree를 제거한다. root `README.md`는 Agent Company v2 기준으로 다시 작성해 현재 구조, 실행 흐름, MCP 도구, 검증 명령만 남긴다.
+
+### Scope
+
+- 역할별 `.AgentInc-agent-company-worktrees/*` worktree를 제거한다.
+- main 외 로컬 브랜치와 origin의 main 외 브랜치를 삭제한다.
+- root `README.md`에서 v1 tmux, Office, delegate_task 계열 설명을 제거하고 v2 회의 서버 기반 설명으로 교체한다.
+
+### Verification
+
+- `npm run validate`
+- `npm test`
+- `git diff --check`
+- `git status --short --branch`
+- `git branch --list`
+- `git branch -r`
