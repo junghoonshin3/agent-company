@@ -2,7 +2,7 @@
 
 Agent Company는 Codex 안에서 CEO 주도의 작은 제품 팀을 운영하기 위한 로컬 플러그인입니다. 현재 Codex 세션이 CEO 역할을 맡고, 필요한 직원 역할만 Codex native sub-agent로 호출해 회의, 판단, 구현 제안, 검증을 조율합니다.
 
-v2는 `tmux` 상주 직원, 자동 worktree 생성, Kanban/Office 대시보드를 사용하지 않습니다. 직원들은 프로젝트별 로컬 HTTP 회의 서버를 통해 메시지를 읽고 쓰며, 회의 기록과 결정은 `.agent-company/v2` 아래에 파일로 남습니다.
+직원들은 프로젝트별 로컬 HTTP 회의 서버를 통해 메시지를 읽고 쓰며, 회의 기록과 결정은 `.agent-company/v2` 아래에 파일로 남습니다.
 
 ## 주요 기능
 
@@ -81,7 +81,7 @@ CEO는 먼저 실행 계획을 제안합니다. 사용자가 승인하면 `start
 
 ## 런타임 상태
 
-대상 프로젝트에는 `.agent-company/v2` 디렉터리가 생성됩니다. 기존 `.agent-company` v1 파일은 읽기 전용 legacy 기록으로 취급하며 자동 변환하거나 삭제하지 않습니다.
+대상 프로젝트에는 `.agent-company/v2` 디렉터리가 생성됩니다.
 
 | 상태 파일 | 설명 |
 | --- | --- |
@@ -102,7 +102,7 @@ cat .agent-company/v2/meetings/<meeting_id>/messages.jsonl
 | 도구 | 설명 |
 | --- | --- |
 | `start_company` | 대상 프로젝트에 v2 상태를 준비하고 로컬 회의 서버를 시작합니다. |
-| `company_status` | v2 설정, 서버 상태, 활성 회의, 최근 결정, legacy 상태를 읽습니다. |
+| `company_status` | v2 설정, 서버 상태, 활성 회의, 최근 결정을 읽습니다. |
 | `create_meeting` | 참가자와 합의 정책이 있는 회의를 만들고 직원용 HTTP 접속 정보를 반환합니다. |
 | `meeting_status` | 회의 메시지와 현재 합의 상태를 읽습니다. |
 | `post_message` | CEO 또는 직원 메시지를 회의에 추가합니다. |

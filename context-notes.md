@@ -76,3 +76,11 @@
 - Removed role worktrees with `git worktree remove --force` after confirming the user wanted all non-main branches removed. Most role worktrees had stale `.agents/plugins/marketplace.json` and `.DS_Store` changes that were discarded with the worktree removal.
 - Deleted all local branches except `main`, then deleted remote branches `origin/develop` and `origin/fix/implementation-wait-policy-0.1.7`.
 - Verification passed with `npm run validate`, `npm test` with local bind approval, and `git diff --check`.
+
+## 2026-05-22 README v2-only cleanup
+
+- User clarified that README.md can simply remove content unrelated to v2.
+- Scope is the root `README.md`; `plugins/agent-company/README.md` was inspected as related context but should not be changed unless needed for validation.
+- The root README is already v2-oriented, so the cleanup should remove historical exclusions and legacy/v1 handling notes rather than rewrite the document.
+- Removed the root README's tmux/worktree/Kanban/Office exclusion sentence, v1 legacy runtime sentence, and `company_status` legacy wording.
+- Verification passed with no stale keyword matches in root README, `npm run validate`, and `git diff --check`.

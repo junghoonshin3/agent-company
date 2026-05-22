@@ -67,3 +67,11 @@
 - [x] Remove main-external remote branches.
 - [x] Run verification.
 - [x] Commit and push the logical change.
+
+## 2026-05-22 README v2-only cleanup
+
+- [x] Inspect the current root README and related plugin README references.
+- [x] Record the implementation plan, checklist, and context notes.
+- [x] Remove root README content that explains non-v2 behavior or legacy exclusions.
+- [x] Run documentation/runtime validation.
+- [x] Commit the logical change.
