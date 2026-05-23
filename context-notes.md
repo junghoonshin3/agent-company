@@ -121,3 +121,12 @@
 - Keep MCP API compatibility for this pass. Do not add a structured condition field to `post_message`; require the condition to be stated in the final consensus message body and surface conditional participants in the consensus snapshot.
 - Implemented consensus snapshot fields `conditionalParticipants` and `missingParticipants`; the browser viewer now shows "조건 검토 필요" when consensus is reached with conditional participants.
 - Verification passed with `npm run validate`, `npm test` using local bind approval, `npm run check` using local bind approval, and `git diff --check`.
+
+## 2026-05-23 adversarial meeting protocol
+
+- User observed that employees appear to agree immediately and clarified the desired product behavior as active disagreement, challenge, and intense debate before consensus.
+- Current guidance requires rounds and cross-message references, but it still allows employees to frame replies as quick agreement with minor additions.
+- Scope should stay in prompt and protocol guidance plus validation. No MCP schema or runtime persistence change is needed for this pass.
+- CEO should reject bare consensus if a multi-participant meeting lacks substantive counterarguments, failure conditions, or explicit conditions for agreement.
+- Implemented adversarial discussion guidance in the company skill, meeting protocol, delegation routing, output contract, role completion criteria, README files, and validation script.
+- Verification passed with `npm run validate`, `npm test` using local bind approval after sandbox `EPERM`, `npm run check` using local bind approval after sandbox `EPERM`, and `git diff --check`.

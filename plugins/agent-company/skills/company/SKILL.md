@@ -27,6 +27,7 @@ The plan must include:
 - Included and excluded scope.
 - Requirement-to-role mapping for each selected employee, including the owned requirement and why the CEO should not handle it alone.
 - Meeting style and consensus policy.
+- Adversarial review policy, including what must be challenged before agreement is accepted.
 - Discussion rounds and any allowed shortcuts.
 - Expected outputs.
 - Verification plan.
@@ -64,9 +65,9 @@ After user approval:
 2. Call `create_meeting(title, goal, participants, consensus_policy)` for the selected employees.
 3. Immediately share the read-only browser `viewerUrl` returned by `create_meeting` with the user before spawning employees, and say that the URL contains a local meeting token.
 4. Spawn all selected employee sub-agents before waiting for any single employee result. Do not run employees in a spawn-wait-spawn sequence unless the later employee explicitly depends on the earlier result.
-5. Give each employee its role, meeting goal, server `messagesUrl`, `tokenHeader`, `token`, expected output, discussion rounds, and consensus rules.
+5. Give each employee its role, meeting goal, server `messagesUrl`, `tokenHeader`, `token`, expected output, discussion rounds, adversarial duties, and consensus rules.
 6. Employees work concurrently, read and post directly through the local HTTP meeting API, and must read the latest meeting messages before each required round.
-7. For multi-participant meetings, do not accept a final consensus message unless the employee has replied to at least one other participant by message sequence or message id.
+7. For multi-participant meetings, do not accept a final consensus message unless the employee has replied to at least one other participant by message sequence or message id and raised a substantive challenge, failure condition, or conditional objection.
 8. Monitor all spawned employees together with `meeting_status` and, when available, a multi-target wait. Summarize only after reading actual employee messages.
 9. If all required employees post `agree` or `conditional`, review `conditionalParticipants` and close the meeting only after preserving the stated conditions in the consensus, next actions, or explicit user question.
 10. If a material disagreement remains, stop and ask the user with the competing options and evidence.
@@ -75,15 +76,17 @@ After user approval:
 
 ## Round-Based Discussion
 
-Use a round-based async meeting for employee discussions. The CEO can announce the rounds in the employee prompt or as CEO messages in the meeting.
+Use a round-based async meeting for employee discussions. The default meeting posture is adversarial but constructive. Employees are not present to politely endorse the CEO's plan. They must test assumptions, name the strongest counterargument from their role, identify a failure condition, and challenge at least one material claim from another participant before final consensus.
+
+The CEO can announce the rounds in the employee prompt or as CEO messages in the meeting.
 
 1. Briefing round. CEO states the meeting goal, success criteria, constraints, participants, and consensus policy.
-2. Initial position round. Each employee posts a role-specific `statement` with judgment, evidence, risk, and needed questions.
-3. Response round. Each employee reads the current messages and posts a `reply` that references at least one other participant's message `sequence` or `id`, then agrees, challenges, or amends it.
-4. Revision round. Each employee states whether their position changed and why.
-5. Final consensus round. Each employee posts `kind: "consensus"` with `position`, reason, referenced message sequence or id, and any condition or user decision needed.
+2. Initial position round. Each employee posts a role-specific `statement` with judgment, evidence, risk, needed questions, strongest counterargument, and failure condition.
+3. Response round. Each employee reads the current messages and posts a `reply` that references at least one other participant's message `sequence` or `id`, then challenges a material assumption, names a condition for agreement, or explains why an objection is not decisive.
+4. Revision round. Each employee states whether their position changed, which objection survived, and why.
+5. Final consensus round. Each employee posts `kind: "consensus"` with `position`, reason, referenced message sequence or id, addressed objection, and any condition or user decision needed.
 
-Single-participant meetings may skip the response round, but the employee must say that no cross-participant response was possible. For multi-participant meetings, a bare final `agree` without a prior cross-reference is not enough.
+Single-participant meetings may skip the response round, but the employee must still name the strongest counterargument and failure condition. For multi-participant meetings, a bare final `agree` without a prior cross-reference and substantive challenge is not enough. If every participant agrees immediately, the CEO must continue the debate or treat the meeting as insufficiently reviewed.
 
 ## Employee HTTP Instructions
 
@@ -104,8 +107,8 @@ Header: X-Agent-Company-Token: <token>
 Body: {"role":"<role-id>","kind":"statement|reply|consensus|question|result","message":"...","position":"agree|conditional|disagree|needs-user"}
 ```
 
-The employee should post at least one role-specific statement and one consensus message.
-In multi-participant meetings, the employee should also post at least one reply that cites another participant's message sequence or id before the final consensus message.
+The employee must post at least one role-specific statement and one consensus message.
+In multi-participant meetings, the employee must also post at least one reply that cites another participant's message sequence or id and raises a substantive challenge, failure condition, or conditional objection before the final consensus message.
 
 ## MCP Tools
 
@@ -126,6 +129,7 @@ In multi-participant meetings, the employee should also post at least one reply 
 - `needs-user` means the role believes the user must decide.
 
 Consensus is provisionally reached when every required participant has posted `agree` or `conditional`.
+An `agree` position is only credible after the employee has addressed a real objection. Do not close a multi-participant meeting where agreement arrived before any substantive challenge.
 If `conditionalParticipants` is non-empty, the CEO must preserve those conditions in the final consensus and next actions, or continue discussion or ask the user.
 
 ## Implementation Boundary

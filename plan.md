@@ -98,3 +98,23 @@ Agent Company 회의를 단순 의견 취합이 아니라 비동기 심의 회�
 - `npm test`
 - `npm run check`
 - `git diff --check`
+
+## 2026-05-23 Adversarial Meeting Protocol Plan
+
+### Summary
+
+Agent Company 회의가 너무 빠르게 동의로 수렴하지 않도록 토론 규칙을 강화한다. 각 직원은 자기 역할의 권장안뿐 아니라 반대 가설, 실패 조건, 다른 직원 주장에 대한 구체적 반박을 남겨야 하며, CEO는 반박 없는 `agree`를 최종 합의로 받아들이지 않는다.
+
+### Scope
+
+- CEO skill에 적대적 검토 원칙과 합의 전 반박 의무를 추가한다.
+- 회의 프로토콜과 위임 라우팅 문서에 반대 가설, 실패 조건, 반박 기준을 추가한다.
+- 직원 역할 문서의 완료 기준에 “최소 하나의 실질 반박 또는 조건부 반대”를 반영한다.
+- validation script가 새 적대적 회의 규칙을 검증하게 한다.
+- MCP API와 회의 저장 형식은 변경하지 않는다.
+
+### Verification
+
+- `npm run validate`
+- `npm test`
+- `git diff --check`

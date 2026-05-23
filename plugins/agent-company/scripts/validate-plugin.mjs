@@ -66,6 +66,10 @@ assert.match(skill, /Responsible Role Selection/);
 assert.match(skill, /owned requirement/);
 assert.match(skill, /Do not invite roles for general review/);
 assert.match(skill, /Round-Based Discussion/);
+assert.match(skill, /adversarial but constructive/);
+assert.match(skill, /strongest counterargument/);
+assert.match(skill, /failure condition/);
+assert.match(skill, /substantive challenge/);
 assert.match(skill, /Initial position round/);
 assert.match(skill, /Response round/);
 assert.match(skill, /Revision round/);
@@ -126,13 +130,16 @@ assert.match(readme, /\.agent-company\/v2/);
 assert.match(readme, /The old tmux task tools were removed in v2/);
 assert.match(readme, /viewerUrl/);
 assert.match(readme, /initial position, response, revision, and final consensus rounds/);
+assert.match(readme, /adversarial initial position/);
+assert.match(readme, /substantive challenge, failure condition, or conditional objection/);
 assert.match(readme, /conditionalParticipants/);
 
 const rootReadme = await readFile(path.join(root, "README.md"), "utf8");
 assert.match(rootReadme, /참여 역할별 담당 요구사항/);
 assert.match(rootReadme, /책임 역할만 호출/);
 assert.match(rootReadme, /viewerUrl/);
-assert.match(rootReadme, /라운드 기반 회의/);
+assert.match(rootReadme, /적대적 라운드 기반 회의/);
+assert.match(rootReadme, /최강 반대 가설과 실패 조건/);
 assert.match(rootReadme, /조건부 동의 조건/);
 
 const delegationRouting = await readFile(
@@ -145,21 +152,29 @@ assert.match(delegationRouting, /관성적 전체 호출/);
 assert.match(delegationRouting, /CEO 단독 처리 불가 이유/);
 assert.match(delegationRouting, /브리핑, 초기 입장, 상호 반박, 입장 수정, 최종 합의 라운드/);
 assert.match(delegationRouting, /메시지 sequence 또는 id/);
+assert.match(delegationRouting, /생산적 반대/);
+assert.match(delegationRouting, /반박 없는 즉시 동의/);
 
 const ceoRole = await readFile(path.join(pluginRoot, "references", "roles", "ceo.md"), "utf8");
 assert.match(ceoRole, /요구사항 책임 소유자 기반의 최소 조합/);
 assert.match(ceoRole, /단순 참고나 관성적 검토/);
 assert.match(ceoRole, /상호 반박, 입장 수정, 최종 합의 라운드/);
 assert.match(ceoRole, /조건부 참가자/);
+assert.match(ceoRole, /반박 없는 즉시 동의/);
 
 const meetingProtocol = await readFile(path.join(pluginRoot, "references", "protocols", "meeting.md"), "utf8");
 assert.match(meetingProtocol, /## 라운드/);
 assert.match(meetingProtocol, /메시지 sequence 또는 id/);
 assert.match(meetingProtocol, /conditionalParticipants/);
+assert.match(meetingProtocol, /생산적 반대/);
+assert.match(meetingProtocol, /최강 반대 가설/);
+assert.match(meetingProtocol, /즉시 전원 동의/);
 
 const outputContracts = await readFile(path.join(pluginRoot, "references", "protocols", "output-contracts.md"), "utf8");
 assert.match(outputContracts, /상호 반박 메시지/);
 assert.match(outputContracts, /참조한 메시지 sequence 또는 id/);
+assert.match(outputContracts, /최강 반대 가설/);
+assert.match(outputContracts, /주요 전제에 대한 반박/);
 
 const roleFiles = await readdir(path.join(pluginRoot, "references", "roles"));
 for (const fileName of roleFiles.filter((file) => file.endsWith(".md"))) {
@@ -169,6 +184,7 @@ for (const fileName of roleFiles.filter((file) => file.endsWith(".md"))) {
   assert.match(content, /## 품질 기준/);
   if (fileName !== "ceo.md") {
     assert.match(content, /참조한 다른 직원 메시지/);
+    assert.match(content, /실질 반박/);
   }
 }
 

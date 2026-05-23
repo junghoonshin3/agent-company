@@ -114,3 +114,14 @@
 - [x] Update viewer/test/validation coverage for the new consensus semantics.
 - [x] Run verification commands and fix failures.
 - [x] Commit the logical change.
+
+## 2026-05-23 adversarial meeting protocol
+
+- [x] Inspect current CEO skill, meeting protocol, delegation routing, role manuals, and validation coverage.
+- [x] Record the implementation plan, checklist, and context notes.
+- [x] Add adversarial discussion rules to the CEO skill.
+- [x] Update meeting and delegation protocols with opposition and failure-condition requirements.
+- [x] Update employee role completion criteria.
+- [x] Add validation coverage for adversarial meeting guidance.
+- [x] Run verification commands and fix failures.
+- [x] Commit the logical change.
