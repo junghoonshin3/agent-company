@@ -21,7 +21,7 @@ import type {
 export const LEGACY_STATE_DIR_NAME = ".agent-company";
 export const V2_STATE_DIR_NAME = "v2";
 export const DEFAULT_CONSENSUS_POLICY =
-  "모든 필수 참가자가 agree 또는 conditional 입장을 남기면 합의로 본다.";
+  "모든 필수 참가자가 agree 또는 conditional 입장을 남기면 잠정 합의로 보고, conditional 조건은 최종 합의와 다음 액션에 보존한다.";
 
 export function resolveProjectPath(projectPathInput: string): string {
   return path.resolve(projectPathInput);
@@ -303,6 +303,8 @@ export function computeConsensus(meeting: MeetingRecord, messages: MeetingMessag
       positions[message.role] = message.position;
     }
   }
+  const missingParticipants = meeting.participants.filter((participant) => !positions[participant]);
+  const conditionalParticipants = meeting.participants.filter((participant) => positions[participant] === "conditional");
   const blockers = meeting.participants.filter((participant) => {
     const position = positions[participant];
     return position === "disagree" || position === "needs-user";
@@ -311,7 +313,7 @@ export function computeConsensus(meeting: MeetingRecord, messages: MeetingMessag
     const position = positions[participant];
     return position === "agree" || position === "conditional";
   });
-  return { requiredParticipants: meeting.participants, positions, reached, blockers };
+  return { requiredParticipants: meeting.participants, positions, reached, blockers, conditionalParticipants, missingParticipants };
 }
 
 export async function appendDecisionRecord(input: {

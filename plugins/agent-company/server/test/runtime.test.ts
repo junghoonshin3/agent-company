@@ -89,6 +89,10 @@ test("meeting messages track consensus and decisions", async () => {
     message: "코어 런타임 우선에 동의한다.",
     position: "agree",
   }, dir);
+  const partialStatus = await runtime.meetingStatus({ meeting_id: created.meeting.id }, dir);
+  assert.equal(partialStatus.consensus.reached, false);
+  assert.deepEqual(partialStatus.consensus.missingParticipants, ["architect"]);
+
   await runtime.postMessage({
     meeting_id: created.meeting.id,
     role: "architect",
@@ -102,6 +106,8 @@ test("meeting messages track consensus and decisions", async () => {
   assert.equal(status.nextSequence, 4);
   assert.equal(status.consensus.reached, true);
   assert.deepEqual(status.consensus.blockers, []);
+  assert.deepEqual(status.consensus.conditionalParticipants, ["architect"]);
+  assert.deepEqual(status.consensus.missingParticipants, []);
 
   const closed = await runtime.closeMeeting({
     meeting_id: created.meeting.id,
@@ -182,6 +188,8 @@ test("discussion HTTP server requires token and records employee messages", asyn
     const body = await listed.json();
     assert.equal(body.messages.length, 1);
     assert.equal(body.consensus.reached, true);
+    assert.deepEqual(body.consensus.conditionalParticipants, []);
+    assert.deepEqual(body.consensus.missingParticipants, []);
   } finally {
     await new Promise<void>((resolve) => server.close(() => resolve()));
     await rm(dir, { recursive: true, force: true });

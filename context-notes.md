@@ -112,3 +112,12 @@
 - Current skill only says to share `viewerUrl` if the user wants to watch, which is too conditional for the requested behavior.
 - Scope is skill guidance plus validation coverage only. Runtime APIs and viewer implementation do not need changes.
 - Verification passed with `npm run validate` and `git diff --check`.
+
+## 2026-05-23 round-based meeting protocol
+
+- User wants Agent Company employee discussion to feel closer to real discussion, following the previously recommended model.
+- Target model is not fully synchronous human conversation. It is a structured async review meeting with explicit rounds, required cross-references, position revision, and preserved conditional agreement.
+- Existing runtime treats `agree` and `conditional` as enough for `consensus.reached`, while docs say conditional only counts if the condition is preserved. The new behavior should make conditional participation visible instead of silently collapsing it into plain agreement.
+- Keep MCP API compatibility for this pass. Do not add a structured condition field to `post_message`; require the condition to be stated in the final consensus message body and surface conditional participants in the consensus snapshot.
+- Implemented consensus snapshot fields `conditionalParticipants` and `missingParticipants`; the browser viewer now shows "조건 검토 필요" when consensus is reached with conditional participants.
+- Verification passed with `npm run validate`, `npm test` using local bind approval, `npm run check` using local bind approval, and `git diff --check`.

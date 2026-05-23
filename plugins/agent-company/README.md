@@ -2,7 +2,7 @@
 
 Agent Company is a repo-local Codex plugin for running a CEO-led product team with Codex native sub-agents and a project-local discussion server.
 
-The current Codex session acts as CEO. The CEO first proposes a plan for user approval, then starts only the necessary employee agents. Employees discuss through a local HTTP meeting server, and the CEO records the consensus, decision, verification, risks, and next action.
+The current Codex session acts as CEO. The CEO first proposes a plan for user approval, then starts only the necessary employee agents. Employees discuss through a local HTTP meeting server with initial position, response, revision, and final consensus rounds, and the CEO records the consensus, decision, verification, risks, and next action.
 
 ## Components
 
@@ -26,6 +26,8 @@ Existing `.agent-company` v1 files are treated as read-only legacy records. Agen
 ## Discussion Server
 
 `start_company` starts or recovers the project-local discussion server on `127.0.0.1` with an automatically selected port. Employees use HTTP with the token returned by `create_meeting`, and users can open the returned `viewerUrl` to watch the current meeting in a read-only browser timeline.
+
+Multi-participant meetings require employees to reference another participant's message sequence or id before final consensus. Conditional agreement remains visible in the consensus snapshot through `conditionalParticipants`, so the CEO must preserve the stated conditions before closing the meeting.
 
 Supported employee endpoints:
 

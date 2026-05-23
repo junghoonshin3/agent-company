@@ -495,7 +495,10 @@ export function renderMeetingViewerHtml(input: { meetingId: string; roleTitles: 
       document.title = meeting.title + " - Agent Company";
       elements.goal.textContent = meeting.goal;
       elements.status.textContent = stateLabels[meeting.status] || meeting.status;
-      elements.consensus.textContent = consensus.reached ? "완료" : "진행 중";
+      const conditionalCount = consensus.conditionalParticipants ? consensus.conditionalParticipants.length : 0;
+      elements.consensus.textContent = consensus.reached
+        ? (conditionalCount > 0 ? "조건 검토 필요" : "완료")
+        : "진행 중";
       elements.updatedAt.textContent = formatTime(meeting.updatedAt);
       elements.count.textContent = messages.length + "개";
 

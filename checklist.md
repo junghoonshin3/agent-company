@@ -105,3 +105,12 @@
 - [x] Add validation coverage for the mandatory sharing rule.
 - [x] Run verification.
 - [ ] Commit the logical change.
+
+## 2026-05-23 round-based meeting protocol
+
+- [x] Record the implementation plan, checklist, and context notes.
+- [x] Update CEO and employee-facing protocol guidance for round-based discussion.
+- [x] Expose conditional and missing participants in consensus snapshots.
+- [x] Update viewer/test/validation coverage for the new consensus semantics.
+- [x] Run verification commands and fix failures.
+- [x] Commit the logical change.

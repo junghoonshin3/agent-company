@@ -71,3 +71,30 @@ Agent Company v2의 특정 회의 하나를 브라우저에서 실시간으로 �
 - `npm run check`
 - `git diff --check`
 - 로컬 브라우저에서 viewer URL 화면을 확인한다.
+
+## 2026-05-23 Round-Based Meeting Protocol Plan
+
+### Summary
+
+Agent Company 회의를 단순 의견 취합이 아니라 비동기 심의 회의에 가깝게 바꾼다. 직원은 초기 입장, 상호 반박, 입장 수정, 최종 합의 라운드를 거치고, 최종 발언은 다른 직원 메시지 sequence를 참조해야 한다.
+
+### Assumptions
+
+- 완전한 실시간 대화는 목표가 아니며, 로컬 HTTP 회의 서버에 남는 메시지를 기반으로 한 다회차 비동기 토론을 목표로 한다.
+- `conditional`은 동의로 뭉개지지 않아야 하며, 런타임 상태와 CEO 지침에서 조건부 입장을 별도로 드러내야 한다.
+- 이번 변경은 기존 MCP API를 깨지 않는 선에서 한다. 구조화된 조건 필드는 추가하지 않고, 조건은 consensus 메시지 본문에 명시하게 한다.
+
+### Scope
+
+- CEO skill에 라운드 기반 회의 절차와 메시지 참조 의무를 추가한다.
+- 회의, 출력, 라우팅, CEO 역할 프로토콜에 같은 절차를 반영한다.
+- 런타임 consensus snapshot에 조건부 참가자와 미응답 참가자를 노출한다.
+- viewer와 테스트를 새 consensus snapshot에 맞춘다.
+- validation script가 새 회의 절차 핵심 문구를 검증하게 한다.
+
+### Verification
+
+- `npm run validate`
+- `npm test`
+- `npm run check`
+- `git diff --check`
