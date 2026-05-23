@@ -96,3 +96,12 @@
 - [x] Update README, plugin README, company skill, and validation checks.
 - [x] Verify with automated checks and browser view.
 - [x] Commit the logical change.
+
+## 2026-05-23 mandatory viewerUrl sharing
+
+- [x] Inspect the company skill and validation coverage.
+- [x] Record the implementation context.
+- [x] Update the company skill so CEO always shares `viewerUrl` after `create_meeting`.
+- [x] Add validation coverage for the mandatory sharing rule.
+- [x] Run verification.
+- [ ] Commit the logical change.

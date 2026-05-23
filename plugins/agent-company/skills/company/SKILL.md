@@ -61,10 +61,10 @@ After user approval:
 
 1. Call `start_company(project_path)` to initialize `.agent-company/v2` and start the local discussion server.
 2. Call `create_meeting(title, goal, participants, consensus_policy)` for the selected employees.
-3. Spawn all selected employee sub-agents before waiting for any single employee result. Do not run employees in a spawn-wait-spawn sequence unless the later employee explicitly depends on the earlier result.
-4. Give each employee its role, meeting goal, server `messagesUrl`, `tokenHeader`, `token`, expected output, and consensus rules.
-5. Employees work concurrently, read and post directly through the local HTTP meeting API, and respond to existing meeting messages when useful.
-6. If the user wants to watch the discussion, share the read-only browser `viewerUrl` returned by `create_meeting`.
+3. Immediately share the read-only browser `viewerUrl` returned by `create_meeting` with the user before spawning employees, and say that the URL contains a local meeting token.
+4. Spawn all selected employee sub-agents before waiting for any single employee result. Do not run employees in a spawn-wait-spawn sequence unless the later employee explicitly depends on the earlier result.
+5. Give each employee its role, meeting goal, server `messagesUrl`, `tokenHeader`, `token`, expected output, and consensus rules.
+6. Employees work concurrently, read and post directly through the local HTTP meeting API, and respond to existing meeting messages when useful.
 7. Monitor all spawned employees together with `meeting_status` and, when available, a multi-target wait. Summarize only after reading actual employee messages.
 8. If all required employees post `agree` or `conditional`, close the meeting with `close_meeting`.
 9. If a material disagreement remains, stop and ask the user with the competing options and evidence.

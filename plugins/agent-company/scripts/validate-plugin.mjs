@@ -71,6 +71,8 @@ assert.match(skill, /post_message/);
 assert.match(skill, /close_meeting/);
 assert.match(skill, /X-Agent-Company-Token/);
 assert.match(skill, /viewerUrl/);
+assert.match(skill, /Immediately share the read-only browser `viewerUrl`/);
+assert.match(skill, /URL contains a local meeting token/);
 for (const term of forbiddenRuntimeTerms) {
   assert.doesNotMatch(skill, new RegExp(term), `skill must not reference ${term}`);
 }

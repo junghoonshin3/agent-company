@@ -105,3 +105,10 @@
 - The viewer serves dependency-free HTML/CSS/JS from the discussion server, then polls the existing meeting API with the token header every 2 seconds.
 - The in-app Browser plugin had no registered browser backend in this session, so UI verification used Chrome through Computer Use against a disposable temp-project server. The view rendered the meeting title, connected state, participants, consensus, and two sample messages.
 - Verification passed with `npm test` and `npm run check` after rerunning both with local bind approval. The first sandboxed runs failed on `listen EPERM` for `127.0.0.1`.
+
+## 2026-05-23 mandatory viewerUrl sharing
+
+- User wants the Agent Company skill markdown to require sharing `viewerUrl` when the skill runs.
+- Current skill only says to share `viewerUrl` if the user wants to watch, which is too conditional for the requested behavior.
+- Scope is skill guidance plus validation coverage only. Runtime APIs and viewer implementation do not need changes.
+- Verification passed with `npm run validate` and `git diff --check`.
