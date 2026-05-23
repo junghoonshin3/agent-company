@@ -13,7 +13,7 @@ Agent Company는 Codex 안에서 CEO 주도의 작은 제품 팀을 운영하기
 - 로컬 회의 서버. `start_company`가 `127.0.0.1`에 프로젝트별 HTTP 서버를 시작하고, `create_meeting`이 직원용 접속 URL, 토큰, 브라우저용 `viewerUrl`을 반환합니다.
 - 회의 보기. `viewerUrl`을 브라우저에서 열면 현재 회의의 발언 타임라인과 합의 상태를 읽기 전용으로 볼 수 있습니다.
 - 파일 기반 기록. 회의 메타데이터, 메시지, 결정, 서버 상태를 `.agent-company/v2`에 저장합니다.
-- 합의 기반 종료. 모든 필수 직원이 `agree` 또는 `conditional` 입장을 남기면 CEO가 조건부 동의 조건을 보존한 뒤 회의를 닫습니다.
+- 합의 기반 종료. 모든 필수 직원이 `agree` 또는 `conditional` 입장을 남기고 런타임 토론 충족 판정을 통과하면 CEO가 조건부 동의 조건을 보존한 뒤 회의를 닫습니다.
 
 ## 요구 사항
 
@@ -54,7 +54,7 @@ CEO는 먼저 실행 계획을 제안합니다. 사용자가 승인하면 `start
 4. `create_meeting`으로 회의방, 직원용 HTTP 접속 정보, 브라우저용 `viewerUrl`을 만듭니다.
 5. 선택된 직원 sub-agent를 모두 먼저 시작합니다.
 6. 직원들은 회의 서버에서 메시지를 읽고 초기 입장, 상호 반박, 입장 수정, 최종 합의 라운드를 남기며 주요 전제에 반박하거나 합의 가능 조건을 제시합니다.
-7. CEO가 `meeting_status`로 실제 메시지, 참조된 발언, 합의 상태, 조건부 참가자를 확인합니다.
+7. CEO가 `meeting_status`로 실제 메시지, 참조된 발언, 합의 상태, 조건부 참가자, 반박 부족 여부를 확인합니다.
 8. 합의가 나면 `close_meeting`으로 요약, 보존된 조건을 포함한 합의, 남은 질문, 다음 액션을 기록합니다.
 9. 중요한 결정은 `record_decision`으로 `.agent-company/v2/decisions.jsonl`에 남깁니다.
 
@@ -100,6 +100,8 @@ http://127.0.0.1:<port>/meetings/<meeting_id>?token=<token>
 ```
 
 파일 기록을 직접 확인하려면 해당 회의의 `messages.jsonl`을 읽으면 됩니다.
+
+다중 참가자 회의에서 전원이 동의했더라도 구조적 반박 라운드가 부족하면 consensus snapshot의 `discussionSatisfied`가 false가 되고 `discussionInsufficientParticipants`에 부족한 역할이 표시됩니다. 이때 `consensus.reached`는 false이며 viewer는 “반박 부족” 상태를 보여줍니다.
 
 ```sh
 cat .agent-company/v2/meetings/<meeting_id>/messages.jsonl

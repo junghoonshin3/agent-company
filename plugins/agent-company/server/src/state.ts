@@ -313,7 +313,48 @@ export function computeConsensus(meeting: MeetingRecord, messages: MeetingMessag
     const position = positions[participant];
     return position === "agree" || position === "conditional";
   });
-  return { requiredParticipants: meeting.participants, positions, reached, blockers, conditionalParticipants, missingParticipants };
+  const discussionInsufficientParticipants = discussionInsufficientFor(meeting.participants, messages);
+  const discussionSatisfied = discussionInsufficientParticipants.length === 0;
+  return {
+    requiredParticipants: meeting.participants,
+    positions,
+    reached: reached && discussionSatisfied,
+    blockers,
+    conditionalParticipants,
+    missingParticipants,
+    discussionSatisfied,
+    discussionInsufficientParticipants,
+  };
+}
+
+function discussionInsufficientFor(participants: RoleId[], messages: MeetingMessage[]): RoleId[] {
+  if (participants.length < 2) {
+    return [];
+  }
+  return participants.filter((participant) => !hasQualifyingReplyBeforeFinalPosition(participant, participants, messages));
+}
+
+function hasQualifyingReplyBeforeFinalPosition(
+  participant: RoleId,
+  participants: RoleId[],
+  messages: MeetingMessage[],
+): boolean {
+  const finalPosition = [...messages]
+    .reverse()
+    .find((message) => message.role === participant && message.position);
+  if (!finalPosition) {
+    return false;
+  }
+  return messages.some((message) => {
+    if (message.role !== participant || message.kind !== "reply" || message.sequence >= finalPosition.sequence) {
+      return false;
+    }
+    return messages.some((previous) => (
+      previous.sequence < message.sequence
+      && previous.role !== participant
+      && participants.includes(previous.role)
+    ));
+  });
 }
 
 export async function appendDecisionRecord(input: {

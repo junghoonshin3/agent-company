@@ -118,3 +118,24 @@ Agent Company 회의가 너무 빠르게 동의로 수렴하지 않도록 토론
 - `npm run validate`
 - `npm test`
 - `git diff --check`
+
+## 2026-05-23 Runtime Discussion Sufficiency Plan
+
+### Summary
+
+Agent Company consensus snapshot에 구조적 토론 충족 여부를 추가한다. 다중 참가자 회의에서 반박 라운드 없이 전원이 동의하면 `consensus.reached`를 false로 유지하고 viewer에는 반박 부족 상태를 표시한다.
+
+### Scope
+
+- `ConsensusSnapshot`에 `discussionSatisfied`와 `discussionInsufficientParticipants`를 추가한다.
+- 다중 참가자 회의는 참가자별 최종 position 전에 다른 참가자 발언 이후의 `reply`가 있어야 토론 충족으로 본다.
+- 단일 참가자 회의는 상호 반박이 불가능하므로 토론 충족으로 본다.
+- viewer, README, validation, tests를 새 snapshot 의미에 맞춘다.
+- 메시지 의미 분석은 하지 않고 `kind`, `role`, `sequence` 기반 구조 판정만 한다.
+
+### Verification
+
+- `npm run validate`
+- `npm test`
+- `npm run check`
+- `git diff --check`

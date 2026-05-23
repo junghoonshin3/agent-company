@@ -29,6 +29,8 @@ Existing `.agent-company` v1 files are treated as read-only legacy records. Agen
 
 Multi-participant meetings require employees to reference another participant's message sequence or id and raise a substantive challenge, failure condition, or conditional objection before final consensus. Conditional agreement remains visible in the consensus snapshot through `conditionalParticipants`, so the CEO must preserve the stated conditions before closing the meeting.
 
+The runtime also exposes structural discussion sufficiency through `discussionSatisfied` and `discussionInsufficientParticipants`. If every participant posts `agree` or `conditional` without a qualifying reply round, `consensus.reached` remains false and the viewer shows the rebuttal-insufficient state.
+
 Supported employee endpoints:
 
 ```text

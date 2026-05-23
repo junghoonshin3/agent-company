@@ -130,3 +130,12 @@
 - CEO should reject bare consensus if a multi-participant meeting lacks substantive counterarguments, failure conditions, or explicit conditions for agreement.
 - Implemented adversarial discussion guidance in the company skill, meeting protocol, delegation routing, output contract, role completion criteria, README files, and validation script.
 - Verification passed with `npm run validate`, `npm test` using local bind approval after sandbox `EPERM`, `npm run check` using local bind approval after sandbox `EPERM`, and `git diff --check`.
+
+## 2026-05-23 runtime discussion sufficiency
+
+- User chose the stricter behavior: insufficient discussion should block `consensus.reached`, not merely show a separate warning.
+- Runtime should still avoid semantic NLP. The first implementation should use structural evidence: participant position plus a later `reply` after another participant's message.
+- Single-participant meetings cannot perform cross-participant rebuttal, so they should remain eligible for consensus once the participant posts `agree` or `conditional`.
+- Viewer should distinguish position consensus blocked by missing rebuttal from ordinary in-progress meetings by showing a "반박 부족" state.
+- Implemented `discussionSatisfied` and `discussionInsufficientParticipants`; `consensus.reached` now requires both position consensus and runtime discussion sufficiency.
+- Verification passed with `npm run validate`, `npm test` using local bind approval after sandbox `EPERM`, `npm run check` using local bind approval after sandbox `EPERM`, and `git diff --check`.

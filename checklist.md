@@ -125,3 +125,13 @@
 - [x] Add validation coverage for adversarial meeting guidance.
 - [x] Run verification commands and fix failures.
 - [x] Commit the logical change.
+
+## 2026-05-23 runtime discussion sufficiency
+
+- [x] Inspect consensus snapshot type, computeConsensus, viewer rendering, and tests.
+- [x] Record the implementation plan, checklist, and context notes.
+- [x] Add runtime discussion sufficiency fields and reached gating.
+- [x] Update viewer, README, and validation coverage.
+- [x] Add tests for insufficient and sufficient discussion.
+- [x] Run verification commands and fix failures.
+- [x] Commit the logical change.

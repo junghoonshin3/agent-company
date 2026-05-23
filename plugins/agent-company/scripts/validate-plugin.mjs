@@ -76,6 +76,8 @@ assert.match(skill, /Revision round/);
 assert.match(skill, /Final consensus round/);
 assert.match(skill, /message sequence or message id/);
 assert.match(skill, /conditionalParticipants/);
+assert.match(skill, /discussionSatisfied/);
+assert.match(skill, /discussionInsufficientParticipants/);
 assert.match(skill, /create_meeting/);
 assert.match(skill, /meeting_status/);
 assert.match(skill, /post_message/);
@@ -107,6 +109,8 @@ assert.match(types, /LegacyState/);
 assert.match(types, /viewerUrl/);
 assert.match(types, /conditionalParticipants/);
 assert.match(types, /missingParticipants/);
+assert.match(types, /discussionSatisfied/);
+assert.match(types, /discussionInsufficientParticipants/);
 
 const discussionServer = await readFile(path.join(pluginRoot, "server", "src", "discussion-server.ts"), "utf8");
 assert.match(discussionServer, /createServer/);
@@ -133,6 +137,8 @@ assert.match(readme, /initial position, response, revision, and final consensus 
 assert.match(readme, /adversarial initial position/);
 assert.match(readme, /substantive challenge, failure condition, or conditional objection/);
 assert.match(readme, /conditionalParticipants/);
+assert.match(readme, /discussionSatisfied/);
+assert.match(readme, /discussionInsufficientParticipants/);
 
 const rootReadme = await readFile(path.join(root, "README.md"), "utf8");
 assert.match(rootReadme, /참여 역할별 담당 요구사항/);
@@ -141,6 +147,8 @@ assert.match(rootReadme, /viewerUrl/);
 assert.match(rootReadme, /적대적 라운드 기반 회의/);
 assert.match(rootReadme, /최강 반대 가설과 실패 조건/);
 assert.match(rootReadme, /조건부 동의 조건/);
+assert.match(rootReadme, /discussionSatisfied/);
+assert.match(rootReadme, /반박 부족/);
 
 const delegationRouting = await readFile(
   path.join(pluginRoot, "references", "protocols", "delegation-routing.md"),
@@ -161,11 +169,14 @@ assert.match(ceoRole, /단순 참고나 관성적 검토/);
 assert.match(ceoRole, /상호 반박, 입장 수정, 최종 합의 라운드/);
 assert.match(ceoRole, /조건부 참가자/);
 assert.match(ceoRole, /반박 없는 즉시 동의/);
+assert.match(ceoRole, /discussionSatisfied/);
 
 const meetingProtocol = await readFile(path.join(pluginRoot, "references", "protocols", "meeting.md"), "utf8");
 assert.match(meetingProtocol, /## 라운드/);
 assert.match(meetingProtocol, /메시지 sequence 또는 id/);
 assert.match(meetingProtocol, /conditionalParticipants/);
+assert.match(meetingProtocol, /discussionSatisfied/);
+assert.match(meetingProtocol, /discussionInsufficientParticipants/);
 assert.match(meetingProtocol, /생산적 반대/);
 assert.match(meetingProtocol, /최강 반대 가설/);
 assert.match(meetingProtocol, /즉시 전원 동의/);

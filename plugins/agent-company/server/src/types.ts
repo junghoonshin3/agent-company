@@ -130,6 +130,8 @@ export interface ConsensusSnapshot {
   blockers: RoleId[];
   conditionalParticipants: RoleId[];
   missingParticipants: RoleId[];
+  discussionSatisfied: boolean;
+  discussionInsufficientParticipants: RoleId[];
 }
 
 export interface MeetingConnection {

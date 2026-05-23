@@ -69,7 +69,7 @@ After user approval:
 6. Employees work concurrently, read and post directly through the local HTTP meeting API, and must read the latest meeting messages before each required round.
 7. For multi-participant meetings, do not accept a final consensus message unless the employee has replied to at least one other participant by message sequence or message id and raised a substantive challenge, failure condition, or conditional objection.
 8. Monitor all spawned employees together with `meeting_status` and, when available, a multi-target wait. Summarize only after reading actual employee messages.
-9. If all required employees post `agree` or `conditional`, review `conditionalParticipants` and close the meeting only after preserving the stated conditions in the consensus, next actions, or explicit user question.
+9. If `meeting_status.consensus.reached` is true, review `conditionalParticipants` and close the meeting only after preserving the stated conditions in the consensus, next actions, or explicit user question. If `discussionSatisfied` is false, continue the debate instead of closing.
 10. If a material disagreement remains, stop and ask the user with the competing options and evidence.
 11. Record important CEO decisions with `record_decision`.
 12. Report the final outcome with participants, consensus, verification, risks, and next action.
@@ -128,8 +128,8 @@ In multi-participant meetings, the employee must also post at least one reply th
 - `disagree` means the role objects and provides evidence.
 - `needs-user` means the role believes the user must decide.
 
-Consensus is provisionally reached when every required participant has posted `agree` or `conditional`.
-An `agree` position is only credible after the employee has addressed a real objection. Do not close a multi-participant meeting where agreement arrived before any substantive challenge.
+Consensus is provisionally reached when every required participant has posted `agree` or `conditional` and the runtime `discussionSatisfied` field is true.
+An `agree` position is only credible after the employee has addressed a real objection. Do not close a multi-participant meeting where `discussionSatisfied` is false or `discussionInsufficientParticipants` is non-empty.
 If `conditionalParticipants` is non-empty, the CEO must preserve those conditions in the final consensus and next actions, or continue discussion or ask the user.
 
 ## Implementation Boundary

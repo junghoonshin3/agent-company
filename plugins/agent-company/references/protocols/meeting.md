@@ -33,8 +33,9 @@
 
 ## 합의
 
-- 모든 필수 참가자가 `agree` 또는 `conditional` 입장을 남기면 잠정 합의로 본다.
+- 모든 필수 참가자가 `agree` 또는 `conditional` 입장을 남기고 runtime `discussionSatisfied`가 true이면 잠정 합의로 본다.
 - 즉시 전원 동의는 합의가 아니라 검토 부족 신호로 본다.
+- `discussionInsufficientParticipants`가 비어 있지 않으면 CEO는 해당 참가자의 반박 라운드를 계속 진행한다.
 - `conditional`은 조건이 최종 결정, 다음 액션, 사용자 질문에 보존될 때만 최종 합의로 인정한다.
 - `conditionalParticipants`가 비어 있지 않으면 CEO는 해당 조건을 합의문에 반영하거나 회의를 계속 진행한다.
 - `disagree` 또는 `needs-user`가 남아 있으면 CEO는 사용자에게 선택지를 올리고 멈춘다.
