@@ -25,7 +25,7 @@ Existing `.agent-company` v1 files are treated as read-only legacy records. Agen
 
 ## Discussion Server
 
-`start_company` starts or recovers the project-local discussion server on `127.0.0.1` with an automatically selected port. Employees use HTTP with the token returned by `create_meeting`.
+`start_company` starts or recovers the project-local discussion server on `127.0.0.1` with an automatically selected port. Employees use HTTP with the token returned by `create_meeting`, and users can open the returned `viewerUrl` to watch the current meeting in a read-only browser timeline.
 
 Supported employee endpoints:
 
@@ -35,7 +35,14 @@ GET /api/meetings/<meeting_id>/messages?after_sequence=<n>
 POST /api/meetings/<meeting_id>/messages
 ```
 
-Every endpoint except `/health` requires the `X-Agent-Company-Token` header.
+Supported viewer endpoint:
+
+```text
+GET /meetings/<meeting_id>?token=<token>
+```
+
+Every API endpoint except `/health` requires the `X-Agent-Company-Token` header.
+The viewer endpoint uses the `token` query parameter because browsers cannot attach the employee API header when opening a URL directly.
 
 ## MCP Tools
 

@@ -86,3 +86,13 @@
 - [x] Add validation coverage for the new guidance.
 - [x] Run verification commands and fix failures.
 - [x] Commit the logical change.
+
+## 2026-05-23 current meeting browser viewer
+
+- [x] Record the implementation plan, checklist, and context notes.
+- [x] Add `viewerUrl` to meeting connection types and runtime output.
+- [x] Add token-protected single-meeting dashboard route to the discussion server.
+- [x] Add tests for viewer URL generation, dashboard auth, and dashboard HTML.
+- [x] Update README, plugin README, company skill, and validation checks.
+- [x] Verify with automated checks and browser view.
+- [x] Commit the logical change.

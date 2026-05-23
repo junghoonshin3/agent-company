@@ -49,3 +49,25 @@ main만 유지하고 나머지 로컬·원격 브랜치와 역할별 worktree를
 - `git status --short --branch`
 - `git branch --list`
 - `git branch -r`
+
+## 2026-05-23 Current Meeting Viewer Plan
+
+### Summary
+
+Agent Company v2의 특정 회의 하나를 브라우저에서 실시간으로 볼 수 있는 읽기 전용 대시보드를 추가한다. 기존 로컬 discussion server가 정적 HTML/CSS/JS를 직접 제공하고, `create_meeting` 결과에 바로 열 수 있는 `viewerUrl`을 포함한다.
+
+### Scope
+
+- `MeetingConnection`에 `viewerUrl`을 추가한다.
+- `GET /meetings/<meeting_id>?token=<token>`에서 현재 회의 전용 채팅 타임라인 화면을 제공한다.
+- 대시보드는 회의 제목, 목표, 상태, 참가 역할, 합의 상태, 발언 종류, 입장, 작성 시각, 메시지 본문을 보여준다.
+- 대시보드는 기존 회의 API를 2초 간격으로 폴링한다.
+- 브라우저에서 메시지 작성, 회의 종료, 결정 기록은 제공하지 않는다.
+
+### Verification
+
+- `npm run validate`
+- `npm test`
+- `npm run check`
+- `git diff --check`
+- 로컬 브라우저에서 viewer URL 화면을 확인한다.

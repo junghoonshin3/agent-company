@@ -64,11 +64,12 @@ After user approval:
 3. Spawn all selected employee sub-agents before waiting for any single employee result. Do not run employees in a spawn-wait-spawn sequence unless the later employee explicitly depends on the earlier result.
 4. Give each employee its role, meeting goal, server `messagesUrl`, `tokenHeader`, `token`, expected output, and consensus rules.
 5. Employees work concurrently, read and post directly through the local HTTP meeting API, and respond to existing meeting messages when useful.
-6. Monitor all spawned employees together with `meeting_status` and, when available, a multi-target wait. Summarize only after reading actual employee messages.
-7. If all required employees post `agree` or `conditional`, close the meeting with `close_meeting`.
-8. If a material disagreement remains, stop and ask the user with the competing options and evidence.
-9. Record important CEO decisions with `record_decision`.
-10. Report the final outcome with participants, consensus, verification, risks, and next action.
+6. If the user wants to watch the discussion, share the read-only browser `viewerUrl` returned by `create_meeting`.
+7. Monitor all spawned employees together with `meeting_status` and, when available, a multi-target wait. Summarize only after reading actual employee messages.
+8. If all required employees post `agree` or `conditional`, close the meeting with `close_meeting`.
+9. If a material disagreement remains, stop and ask the user with the competing options and evidence.
+10. Record important CEO decisions with `record_decision`.
+11. Report the final outcome with participants, consensus, verification, risks, and next action.
 
 ## Employee HTTP Instructions
 
@@ -95,7 +96,7 @@ The employee should post at least one role-specific statement and one consensus 
 
 - `start_company(project_path)` initializes v2 state and starts the discussion server.
 - `company_status(project_path?)` reads v2 config, server state, meetings, decisions, and legacy metadata.
-- `create_meeting(project_path?, title, goal, participants, consensus_policy?)` creates a meeting and returns HTTP connection details.
+- `create_meeting(project_path?, title, goal, participants, consensus_policy?)` creates a meeting and returns HTTP connection details plus a read-only browser `viewerUrl`.
 - `meeting_status(project_path?, meeting_id, after_sequence?)` reads the meeting, messages, and consensus state.
 - `post_message(project_path?, meeting_id, role, message, kind?, position?)` appends a CEO or employee message.
 - `close_meeting(project_path?, meeting_id, summary, consensus, unresolved_questions?, next_actions?)` closes a meeting.

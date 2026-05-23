@@ -94,3 +94,14 @@
 - Active plugin cache should not be edited as part of this change.
 - Implemented the policy in the CEO skill, delegation routing protocol, CEO role manual, root README, and validation script.
 - Verification passed with `npm run validate`, `git diff --check`, and `npm test` after rerunning with local bind approval. The first sandboxed `npm test` failed on `listen EPERM` for `127.0.0.1`.
+
+## 2026-05-23 current meeting browser viewer
+
+- User chose a browser dashboard, limited to the current meeting only, with a chat timeline presentation.
+- Access should be via a token-bearing URL returned by `create_meeting`.
+- Scope is read-only. Browser-side message posting, meeting closing, meeting lists, search, and operations console are out of scope.
+- Implementation should avoid new frontend dependencies and keep the dashboard served by the existing `127.0.0.1` discussion server.
+- Implemented `viewerUrl` on `MeetingConnection`, backed by `GET /meetings/<meeting_id>?token=<token>`.
+- The viewer serves dependency-free HTML/CSS/JS from the discussion server, then polls the existing meeting API with the token header every 2 seconds.
+- The in-app Browser plugin had no registered browser backend in this session, so UI verification used Chrome through Computer Use against a disposable temp-project server. The view rendered the meeting title, connected state, participants, consensus, and two sample messages.
+- Verification passed with `npm test` and `npm run check` after rerunning both with local bind approval. The first sandboxed runs failed on `listen EPERM` for `127.0.0.1`.

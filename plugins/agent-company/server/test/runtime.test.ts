@@ -73,6 +73,8 @@ test("meeting messages track consensus and decisions", async () => {
   assert.equal(created.meeting.status, "open");
   assert.equal(created.connection?.tokenHeader, "X-Agent-Company-Token");
   assert.match(created.connection?.messagesUrl ?? "", /\/api\/meetings\/.+\/messages$/);
+  assert.match(created.connection?.viewerUrl ?? "", /\/meetings\/.+\?token=/);
+  assert.ok(created.connection?.viewerUrl.includes(encodeURIComponent(created.connection.token)));
 
   await runtime.postMessage({
     meeting_id: created.meeting.id,
@@ -143,6 +145,18 @@ test("discussion HTTP server requires token and records employee messages", asyn
     const messagesUrl = `${serverState.url}/api/meetings/${meeting.id}/messages`;
     const unauthorized = await fetch(messagesUrl);
     assert.equal(unauthorized.status, 401);
+
+    const viewerUrl = `${serverState.url}/meetings/${encodeURIComponent(meeting.id)}`;
+    const unauthorizedViewer = await fetch(viewerUrl);
+    assert.equal(unauthorizedViewer.status, 401);
+
+    const authorizedViewer = await fetch(`${viewerUrl}?token=${encodeURIComponent(token)}`);
+    assert.equal(authorizedViewer.status, 200);
+    assert.match(authorizedViewer.headers.get("content-type") ?? "", /text\/html/);
+    const viewerHtml = await authorizedViewer.text();
+    assert.match(viewerHtml, /Agent Company Meeting/);
+    assert.match(viewerHtml, new RegExp(`"meetingId":"${meeting.id}"`));
+    assert.match(viewerHtml, /회의 발언/);
 
     const created = await fetch(messagesUrl, {
       method: "POST",

@@ -9,7 +9,8 @@ Agent Company는 Codex 안에서 CEO 주도의 작은 제품 팀을 운영하기
 - CEO Plan Mode. 직원 실행 전에 목표, 성공 기준, 참여 역할별 담당 요구사항, 검증 계획을 사용자에게 먼저 제안합니다.
 - 책임 역할만 호출. 사용자 요구사항에 직접 책임이 있거나 실질적 리스크를 소유한 역할만 선택합니다.
 - 병렬 직원 실행. 선택된 직원 sub-agent를 먼저 모두 시작한 뒤, 회의 메시지와 가능한 multi-target wait로 함께 모니터링합니다.
-- 로컬 회의 서버. `start_company`가 `127.0.0.1`에 프로젝트별 HTTP 서버를 시작하고, `create_meeting`이 직원용 접속 URL과 토큰을 반환합니다.
+- 로컬 회의 서버. `start_company`가 `127.0.0.1`에 프로젝트별 HTTP 서버를 시작하고, `create_meeting`이 직원용 접속 URL, 토큰, 브라우저용 `viewerUrl`을 반환합니다.
+- 회의 보기. `viewerUrl`을 브라우저에서 열면 현재 회의의 발언 타임라인과 합의 상태를 읽기 전용으로 볼 수 있습니다.
 - 파일 기반 기록. 회의 메타데이터, 메시지, 결정, 서버 상태를 `.agent-company/v2`에 저장합니다.
 - 합의 기반 종료. 모든 필수 직원이 `agree` 또는 `conditional` 입장을 남기면 CEO가 회의를 닫습니다.
 
@@ -49,7 +50,7 @@ CEO는 먼저 실행 계획을 제안합니다. 사용자가 승인하면 `start
 1. CEO가 사용자 요청을 목표와 성공 기준으로 정리합니다.
 2. CEO가 선택한 직원별 담당 요구사항, 참여 이유, 합의 정책을 포함한 계획을 제안합니다.
 3. 사용자가 승인하면 `start_company`로 `.agent-company/v2` 상태와 로컬 회의 서버를 준비합니다.
-4. `create_meeting`으로 회의방과 직원용 HTTP 접속 정보를 만듭니다.
+4. `create_meeting`으로 회의방, 직원용 HTTP 접속 정보, 브라우저용 `viewerUrl`을 만듭니다.
 5. 선택된 직원 sub-agent를 모두 먼저 시작합니다.
 6. 직원들은 회의 서버에서 메시지를 읽고 직접 발언을 남깁니다.
 7. CEO가 `meeting_status`로 실제 메시지와 합의 상태를 확인합니다.
@@ -91,7 +92,13 @@ CEO는 먼저 실행 계획을 제안합니다. 사용자가 승인하면 `start
 | `.agent-company/v2/meetings/<meeting_id>/messages.jsonl` | CEO와 직원의 회의 메시지입니다. |
 | `.agent-company/v2/decisions.jsonl` | CEO가 기록한 중요한 결정입니다. |
 
-직원 간 대화를 직접 보고 싶으면 해당 회의의 `messages.jsonl`을 확인하면 됩니다.
+직원 간 대화를 브라우저에서 보고 싶으면 `create_meeting` 결과의 `viewerUrl`을 열면 됩니다.
+
+```text
+http://127.0.0.1:<port>/meetings/<meeting_id>?token=<token>
+```
+
+파일 기록을 직접 확인하려면 해당 회의의 `messages.jsonl`을 읽으면 됩니다.
 
 ```sh
 cat .agent-company/v2/meetings/<meeting_id>/messages.jsonl
@@ -103,7 +110,7 @@ cat .agent-company/v2/meetings/<meeting_id>/messages.jsonl
 | --- | --- |
 | `start_company` | 대상 프로젝트에 v2 상태를 준비하고 로컬 회의 서버를 시작합니다. |
 | `company_status` | v2 설정, 서버 상태, 활성 회의, 최근 결정을 읽습니다. |
-| `create_meeting` | 참가자와 합의 정책이 있는 회의를 만들고 직원용 HTTP 접속 정보를 반환합니다. |
+| `create_meeting` | 참가자와 합의 정책이 있는 회의를 만들고 직원용 HTTP 접속 정보와 브라우저용 `viewerUrl`을 반환합니다. |
 | `meeting_status` | 회의 메시지와 현재 합의 상태를 읽습니다. |
 | `post_message` | CEO 또는 직원 메시지를 회의에 추가합니다. |
 | `close_meeting` | 회의 요약, 합의, 남은 질문, 다음 액션을 기록하고 회의를 닫습니다. |

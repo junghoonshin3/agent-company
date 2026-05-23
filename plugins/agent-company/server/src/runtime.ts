@@ -200,12 +200,15 @@ export class AgentCompanyRuntime {
     if (server.status !== "running" || !server.url) {
       throw new Error("Agent Company discussion server is not running");
     }
+    const token = await readServerToken(projectPath);
+    const encodedMeetingId = encodeURIComponent(meetingId);
     return {
       url: server.url,
       tokenHeader: "X-Agent-Company-Token",
-      token: await readServerToken(projectPath),
-      meetingUrl: `${server.url}/api/meetings/${encodeURIComponent(meetingId)}`,
-      messagesUrl: `${server.url}/api/meetings/${encodeURIComponent(meetingId)}/messages`,
+      token,
+      meetingUrl: `${server.url}/api/meetings/${encodedMeetingId}`,
+      messagesUrl: `${server.url}/api/meetings/${encodedMeetingId}/messages`,
+      viewerUrl: `${server.url}/meetings/${encodedMeetingId}?token=${encodeURIComponent(token)}`,
     };
   }
 }

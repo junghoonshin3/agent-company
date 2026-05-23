@@ -5,6 +5,8 @@ import { openSync } from "node:fs";
 import * as fs from "node:fs/promises";
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";
+import { renderMeetingViewerHtml } from "./meeting-viewer.ts";
+import { ROLE_DEFINITIONS } from "./roles.ts";
 import {
   appendMeetingMessage,
   computeConsensus,
@@ -80,6 +82,26 @@ async function handleRequest(
 
   if (method === "GET" && url.pathname === "/health") {
     writeJsonResponse(response, 200, { ok: true });
+    return;
+  }
+
+  const viewerMatch = url.pathname.match(/^\/meetings\/([^/]+)$/);
+  if (method === "GET" && viewerMatch) {
+    if (url.searchParams.get("token") !== token) {
+      writeTextResponse(response, 401, "Missing or invalid Agent Company token.");
+      return;
+    }
+    const meetingId = decodeURIComponent(viewerMatch[1]);
+    try {
+      await readMeetingRecord(projectPath, meetingId);
+    } catch {
+      writeTextResponse(response, 404, "Meeting not found.");
+      return;
+    }
+    writeHtmlResponse(response, 200, renderMeetingViewerHtml({
+      meetingId,
+      roleTitles: Object.fromEntries(ROLE_DEFINITIONS.map((role) => [role.id, role.title])),
+    }));
     return;
   }
 
@@ -166,6 +188,22 @@ function writeJsonResponse(response: ServerResponse, status: number, value: unkn
     "cache-control": "no-store",
   });
   response.end(`${JSON.stringify(value, null, 2)}\n`);
+}
+
+function writeHtmlResponse(response: ServerResponse, status: number, html: string): void {
+  response.writeHead(status, {
+    "content-type": "text/html; charset=utf-8",
+    "cache-control": "no-store",
+  });
+  response.end(html);
+}
+
+function writeTextResponse(response: ServerResponse, status: number, value: string): void {
+  response.writeHead(status, {
+    "content-type": "text/plain; charset=utf-8",
+    "cache-control": "no-store",
+  });
+  response.end(`${value}\n`);
 }
 
 async function runCli(): Promise<void> {

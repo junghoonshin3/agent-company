@@ -70,6 +70,7 @@ assert.match(skill, /meeting_status/);
 assert.match(skill, /post_message/);
 assert.match(skill, /close_meeting/);
 assert.match(skill, /X-Agent-Company-Token/);
+assert.match(skill, /viewerUrl/);
 for (const term of forbiddenRuntimeTerms) {
   assert.doesNotMatch(skill, new RegExp(term), `skill must not reference ${term}`);
 }
@@ -90,12 +91,15 @@ assert.match(types, /MeetingMessage/);
 assert.match(types, /MeetingConnection/);
 assert.match(types, /DiscussionServerState/);
 assert.match(types, /LegacyState/);
+assert.match(types, /viewerUrl/);
 
 const discussionServer = await readFile(path.join(pluginRoot, "server", "src", "discussion-server.ts"), "utf8");
 assert.match(discussionServer, /createServer/);
 assert.match(discussionServer, /messagesMatch = url\.pathname\.match/);
 assert.match(discussionServer, /X-Agent-Company-Token|x-agent-company-token/);
 assert.match(discussionServer, /--daemon/);
+assert.match(discussionServer, /viewerMatch = url\.pathname\.match/);
+assert.match(discussionServer, /renderMeetingViewerHtml/);
 
 const server = await readFile(path.join(pluginRoot, "server", "src", "mcp-server.ts"), "utf8");
 for (const toolName of requiredMcpTools) {
@@ -109,10 +113,12 @@ const readme = await readFile(path.join(pluginRoot, "README.md"), "utf8");
 assert.match(readme, /Codex native sub-agents/);
 assert.match(readme, /\.agent-company\/v2/);
 assert.match(readme, /The old tmux task tools were removed in v2/);
+assert.match(readme, /viewerUrl/);
 
 const rootReadme = await readFile(path.join(root, "README.md"), "utf8");
 assert.match(rootReadme, /참여 역할별 담당 요구사항/);
 assert.match(rootReadme, /책임 역할만 호출/);
+assert.match(rootReadme, /viewerUrl/);
 
 const delegationRouting = await readFile(
   path.join(pluginRoot, "references", "protocols", "delegation-routing.md"),

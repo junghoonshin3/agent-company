@@ -136,6 +136,7 @@ export interface MeetingConnection {
   token: string;
   meetingUrl: string;
   messagesUrl: string;
+  viewerUrl: string;
 }
 
 export interface MeetingStatusResult {
