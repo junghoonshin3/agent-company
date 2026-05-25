@@ -163,3 +163,12 @@
 - The target edit should preserve the existing Korean resume tone and add Agent Company before `Pause it` in the personal projects section.
 - Updated the Notion resume page with an Agent Company sentence in the self-introduction, a full Agent Company personal project entry before `Pause it`, and a Backend / Tooling stack subsection.
 - Verification fetch confirmed the edited Notion content at `2026-05-25T08:01:43.320Z`.
+
+## 2026-05-25 Notion resume self introduction polish
+
+- User wants the resume self-introduction checked for ambiguous or hard-to-understand phrasing and revised to better communicate strengths to a recruiter.
+- Scope should be the self-introduction section only unless the Notion page structure requires a narrow adjacent replacement.
+- Target messaging should emphasize mobile production stability, external SDK/native integration, issue diagnosis, data reliability, background/location processing, measurable outcomes, and current project-based learning.
+- Ambiguous phrases identified in the old self-introduction included broad claims like structural risk resolution, many domains, and continuing practical sense without enough recruiter-readable detail.
+- Rewrote the self-introduction to emphasize Android Native and React Native Android module experience, app stability, data reliability, issue diagnosis through data flow and app lifecycle, measurable KeepWell and Tram outcomes, and recent Flutter, Compose, Supabase, deployment automation, and AI agent workflow learning.
+- Verification fetch confirmed the edited Notion self-introduction at `2026-05-25T08:27:59.912Z`.

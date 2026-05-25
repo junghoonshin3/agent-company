@@ -153,3 +153,10 @@
 - [x] Read the target Notion resume page through MCP.
 - [x] Add the Agent Company project content to the resume.
 - [x] Verify the edited Notion page content.
+
+## 2026-05-25 Notion resume self introduction polish
+
+- [x] Record the implementation plan, checklist, and context notes.
+- [x] Read the current Notion resume self-introduction.
+- [x] Rewrite ambiguous phrasing into recruiter-readable strengths.
+- [x] Verify the edited Notion page content.
