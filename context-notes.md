@@ -151,3 +151,15 @@
 - Captured the local `viewerUrl` with Playwright content screenshots after the in-app browser backend and Chrome extension backend were unavailable, and after direct macOS `screencapture` failed.
 - Generated the README GIF from four token-free dashboard content frames at `plugins/agent-company/assets/agent-company-meeting-demo.gif`.
 - Verification passed with `file plugins/agent-company/assets/agent-company-meeting-demo.gif`, a Node GIF frame-count check showing 4 frames, `git diff --check`, and `npm run validate`.
+
+## 2026-05-25 Notion resume Agent Company update
+
+- User wants to update the Notion resume page at `https://www.notion.so/25-168950d70a6180c4ac01c090785c18a3` with Agent Company experience.
+- User selected Codex MCP connection over direct Notion CLI editing or browser-only editing.
+- Official Notion MCP guidance for Codex uses the remote server URL `https://mcp.notion.com/mcp` and OAuth through `codex mcp login notion`.
+- Current local `codex mcp list` does not include Notion yet.
+- The planned page edits are limited to the resume self-introduction, the top of the personal projects section, and the technology stack section.
+- Notion MCP fetch succeeded for the target page. The page structure is contact summary, self-introduction, work history, work projects, personal projects, technology stack, and education.
+- The target edit should preserve the existing Korean resume tone and add Agent Company before `Pause it` in the personal projects section.
+- Updated the Notion resume page with an Agent Company sentence in the self-introduction, a full Agent Company personal project entry before `Pause it`, and a Backend / Tooling stack subsection.
+- Verification fetch confirmed the edited Notion content at `2026-05-25T08:01:43.320Z`.

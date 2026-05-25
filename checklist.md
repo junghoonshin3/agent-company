@@ -145,3 +145,11 @@
 - [x] Embed the demo GIF in the root README.
 - [x] Run focused verification.
 - [x] Commit the logical change.
+
+## 2026-05-25 Notion resume Agent Company update
+
+- [x] Record the implementation plan, checklist, and context notes.
+- [x] Connect Notion MCP to Codex with OAuth.
+- [x] Read the target Notion resume page through MCP.
+- [x] Add the Agent Company project content to the resume.
+- [x] Verify the edited Notion page content.

@@ -139,3 +139,21 @@ Agent Company consensus snapshot에 구조적 토론 충족 여부를 추가한�
 - `npm test`
 - `npm run check`
 - `git diff --check`
+
+## 2026-05-25 Notion Resume Agent Company Update Plan
+
+### Summary
+
+Notion 이력서 페이지에 Agent Company 개인 프로젝트 경험을 추가한다. 기존 이력서 톤을 유지하고, 과장된 지표 없이 실제 프로젝트 성격과 구현 범위를 설명한다.
+
+### Scope
+
+- 자기소개에 Agent Company 경험을 한 문장 추가한다.
+- 개인 프로젝트 섹션 최상단에 Agent Company 항목을 추가한다.
+- 기술 스택에 Agent Company에서 사용한 Node.js, MCP, 로컬 HTTP 서버, JSONL 기반 기록, Codex sub-agent 관련 키워드를 추가한다.
+- 실무 경력과 기존 개인 프로젝트 내용은 수정하지 않는다.
+
+### Verification
+
+- Notion MCP `fetch`로 수정 전후 페이지 내용을 확인한다.
+- `git diff --check`로 로컬 인수인계 문서 변경을 확인한다.
