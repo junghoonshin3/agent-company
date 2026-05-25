@@ -172,3 +172,17 @@
 - Ambiguous phrases identified in the old self-introduction included broad claims like structural risk resolution, many domains, and continuing practical sense without enough recruiter-readable detail.
 - Rewrote the self-introduction to emphasize Android Native and React Native Android module experience, app stability, data reliability, issue diagnosis through data flow and app lifecycle, measurable KeepWell and Tram outcomes, and recent Flutter, Compose, Supabase, deployment automation, and AI agent workflow learning.
 - Verification fetch confirmed the edited Notion self-introduction at `2026-05-25T08:27:59.912Z`.
+
+## 2026-05-25 Notion resume verified skills cleanup
+
+- User questioned whether deployment automation and Node.js/backend skill claims are accurate.
+- Public GitHub verification found `pause_it/.github/workflows/deploy.yml` with `workflow_dispatch` inputs for `dev` and `prod`.
+- Public GitHub verification found `pause_it/android/fastlane/Fastfile` with `dev` lane uploading to Firebase App Distribution and `prod` lane uploading an AAB to Google Play Console alpha as draft.
+- The accurate wording is a manually triggered GitHub Actions/Fastlane deployment pipeline, not automatic deployment on every push.
+- User said they do not know backend overall and do not know Node.js, so the resume should remove `Node.js` and backend-looking stack labels.
+- Technology stack should include only confident skills and add an AI-specific section for Codex agent plugin work.
+- Updated the self-introduction to say Pause it has a manually runnable test deployment pipeline instead of broad deployment automation.
+- Updated Pause it role and achievement wording to GitHub Actions manual workflow plus Fastlane dev/prod lanes for Firebase App Distribution and Google Play Console alpha upload preparation.
+- Removed `Backend / Tooling`, `Node.js`, and JavaScript/TypeScript from the technology stack. Added `AI / Agent Tools` and `Release / Operations` sections.
+- Also narrowed BeMyPet wording by replacing serverless backend and CI claims with Supabase integration, GitHub Actions operations workflows, and scheduled Edge Function invocation.
+- Verification fetch confirmed the edited Notion content at `2026-05-25T08:37:46.526Z`.

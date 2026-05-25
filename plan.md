@@ -175,3 +175,22 @@ Notion 이력서의 자기소개 섹션에서 애매하거나 내부자에게만
 
 - Notion MCP `fetch`로 수정 전후 자기소개 내용을 확인한다.
 - `git diff --check`로 로컬 인수인계 문서 변경을 확인한다.
+
+## 2026-05-25 Notion Resume Verified Skills Cleanup Plan
+
+### Summary
+
+Notion 이력서에서 배포 자동화와 기술 스택 표현을 실제 확인 가능한 범위로 좁힌다. 백엔드나 Node.js 숙련처럼 오해될 수 있는 표현은 제거하고, Codex용 AI 에이전트 플러그인 경험은 별도 AI 섹션으로 정리한다.
+
+### Scope
+
+- 자기소개의 `배포 자동화` 표현을 수동 실행 가능한 GitHub Actions/Fastlane 배포 파이프라인 경험으로 수정한다.
+- Pause it의 배포 관련 담당 역할과 성과를 `workflow_dispatch` 기반 수동 실행 파이프라인으로 수정한다.
+- 기술 스택에서 `Backend / Tooling`, `Node.js`, 백엔드 숙련으로 읽히는 항목을 제거한다.
+- 기술 스택에 `AI / Agent Tools` 섹션을 추가해 Codex MCP 기반 에이전트 플러그인 개발 경험을 표현한다.
+
+### Verification
+
+- GitHub 공개 저장소의 `pause_it` workflow와 Fastlane 설정으로 배포 파이프라인 표현을 확인한다.
+- Notion MCP `fetch`로 수정 후 이력서 내용을 확인한다.
+- `git diff --check`로 로컬 인수인계 문서 변경을 확인한다.
