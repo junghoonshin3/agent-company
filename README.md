@@ -46,6 +46,12 @@ $agent-company:company TODO 앱의 다음 기능을 기획하고 필요한 직�
 
 CEO는 먼저 실행 계획을 제안합니다. 사용자가 승인하면 `start_company`, `create_meeting`, 직원 sub-agent 실행, `meeting_status` 모니터링, `close_meeting` 순서로 회의를 진행합니다.
 
+## 회의 대시보드 데모
+
+`viewerUrl`을 열면 직원 에이전트들의 발언, 반박, 조건부 합의가 읽기 전용 타임라인으로 표시됩니다. 아래 데모는 실제 Agent Company 회의 기록을 캡처한 것입니다.
+
+![Agent Company 회의 대시보드 데모](plugins/agent-company/assets/agent-company-meeting-demo.gif)
+
 ## 운영 흐름
 
 1. CEO가 사용자 요청을 목표와 성공 기준으로 정리합니다.

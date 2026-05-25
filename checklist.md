@@ -135,3 +135,13 @@
 - [x] Add tests for insufficient and sufficient discussion.
 - [x] Run verification commands and fix failures.
 - [x] Commit the logical change.
+
+## 2026-05-25 README meeting dashboard demo
+
+- [x] Record the implementation plan, checklist, and context notes.
+- [x] Run an actual Agent Company employee meeting for the demo source.
+- [x] Capture the meeting viewer without exposing the local token.
+- [x] Create `plugins/agent-company/assets/agent-company-meeting-demo.gif`.
+- [x] Embed the demo GIF in the root README.
+- [x] Run focused verification.
+- [x] Commit the logical change.

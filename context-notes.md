@@ -139,3 +139,15 @@
 - Viewer should distinguish position consensus blocked by missing rebuttal from ordinary in-progress meetings by showing a "반박 부족" state.
 - Implemented `discussionSatisfied` and `discussionInsufficientParticipants`; `consensus.reached` now requires both position consensus and runtime discussion sufficiency.
 - Verification passed with `npm run validate`, `npm test` using local bind approval after sandbox `EPERM`, `npm run check` using local bind approval after sandbox `EPERM`, and `git diff --check`.
+
+## 2026-05-25 README meeting dashboard demo
+
+- User wants the README to include a recording of Agent Company employees discussing in the dashboard when the skill runs.
+- The selected deliverable is a real demo GIF, not just recording instructions or a placeholder.
+- The selected source is an actual Agent Company employee meeting, not hand-authored sample messages or old records.
+- Scope is documentation/media only: root `README.md` plus `plugins/agent-company/assets/agent-company-meeting-demo.gif`, with no runtime API or schema changes.
+- The recording must avoid exposing the `viewerUrl` token; capture only the dashboard content area or a browser view without the address bar.
+- Ran a real Agent Company meeting with `service-planner`, `ui-ux-designer`, and `qa-engineer`; all three posted statements, cited replies, and conditional consensus.
+- Captured the local `viewerUrl` with Playwright content screenshots after the in-app browser backend and Chrome extension backend were unavailable, and after direct macOS `screencapture` failed.
+- Generated the README GIF from four token-free dashboard content frames at `plugins/agent-company/assets/agent-company-meeting-demo.gif`.
+- Verification passed with `file plugins/agent-company/assets/agent-company-meeting-demo.gif`, a Node GIF frame-count check showing 4 frames, `git diff --check`, and `npm run validate`.
