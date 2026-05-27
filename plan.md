@@ -194,3 +194,23 @@ Notion 이력서에서 배포 자동화와 기술 스택 표현을 실제 확인
 - GitHub 공개 저장소의 `pause_it` workflow와 Fastlane 설정으로 배포 파이프라인 표현을 확인한다.
 - Notion MCP `fetch`로 수정 후 이력서 내용을 확인한다.
 - `git diff --check`로 로컬 인수인계 문서 변경을 확인한다.
+
+## 2026-05-27 Agent Company Deep Discussion Skill Plan
+
+### Summary
+
+Agent Company에 `$agent-company:deep-discussion` 별도 스킬을 추가한다. 이 스킬은 기존 MCP 런타임을 그대로 쓰면서, 고정 라운드 수 없이 참가자 전원이 최종 `agree`에 도달할 때만 CEO가 회의를 닫는 명시 호출 모드로 동작한다.
+
+### Scope
+
+- `plugins/agent-company/skills/deep-discussion/SKILL.md`를 새로 추가한다.
+- 기존 `$agent-company:company` 스킬과 MCP 도구, 서버 API, 상태 타입은 변경하지 않는다.
+- README와 플러그인 README에 새 호출 예시를 추가한다.
+- 회의 프로토콜 문서에 deep discussion 모드의 전원 `agree` 종료 조건을 기록한다.
+- 검증 스크립트에 새 스킬과 전원 `agree` 정책 확인을 추가한다.
+
+### Verification
+
+- `npm run validate`
+- `npm test`
+- `git diff --check`

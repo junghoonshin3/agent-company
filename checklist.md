@@ -169,3 +169,13 @@
 - [x] Update Pause it deployment role and achievement wording.
 - [x] Replace uncertain backend/Node.js stack items with confirmed AI agent tooling items.
 - [x] Verify the edited Notion page content.
+
+## 2026-05-27 Agent Company deep discussion skill
+
+- [x] Inspect current skill, README files, meeting protocol, and validation script.
+- [x] Record the implementation plan, checklist, and context notes.
+- [x] Add the `deep-discussion` skill with all-agree termination rules.
+- [x] Document the new `$agent-company:deep-discussion` invocation.
+- [x] Add validation coverage for the new skill and all-agree policy.
+- [x] Run verification commands and fix failures.
+- [x] Commit the logical change.

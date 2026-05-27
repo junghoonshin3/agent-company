@@ -90,6 +90,28 @@ for (const term of forbiddenRuntimeTerms) {
   assert.doesNotMatch(skill, new RegExp(term), `skill must not reference ${term}`);
 }
 
+const deepDiscussionSkill = await readFile(
+  path.join(pluginRoot, "skills", "deep-discussion", "SKILL.md"),
+  "utf8",
+);
+assert.match(deepDiscussionSkill, /name: deep-discussion/);
+assert.match(deepDiscussionSkill, /\$agent-company:deep-discussion/);
+assert.match(deepDiscussionSkill, /Deep Discussion mode/);
+assert.match(deepDiscussionSkill, /no pre-set round limit/);
+assert.match(deepDiscussionSkill, /all required participants posting final `agree`/);
+assert.match(deepDiscussionSkill, /`conditional`, `disagree`, and `needs-user` never count as completion/);
+assert.match(deepDiscussionSkill, /runtime may mark `consensus\.reached` true/);
+assert.match(deepDiscussionSkill, /Every required participant's latest consensus position is `agree`/);
+assert.match(deepDiscussionSkill, /discussionSatisfied/);
+assert.match(deepDiscussionSkill, /discussionInsufficientParticipants/);
+assert.match(deepDiscussionSkill, /conditionalParticipants/);
+assert.match(deepDiscussionSkill, /create_meeting/);
+assert.match(deepDiscussionSkill, /meeting_status/);
+assert.match(deepDiscussionSkill, /viewerUrl/);
+for (const term of forbiddenRuntimeTerms) {
+  assert.doesNotMatch(deepDiscussionSkill, new RegExp(term), `deep discussion skill must not reference ${term}`);
+}
+
 const runtime = await readFile(path.join(pluginRoot, "server", "src", "runtime.ts"), "utf8");
 assert.match(runtime, /startDiscussionServer/);
 assert.match(runtime, /createMeeting/);
@@ -132,6 +154,9 @@ const readme = await readFile(path.join(pluginRoot, "README.md"), "utf8");
 assert.match(readme, /Codex native sub-agents/);
 assert.match(readme, /\.agent-company\/v2/);
 assert.match(readme, /The old tmux task tools were removed in v2/);
+assert.match(readme, /\$agent-company:deep-discussion/);
+assert.match(readme, /all-participant `agree` termination/);
+assert.match(readme, /conditional` does not count as completion/);
 assert.match(readme, /viewerUrl/);
 assert.match(readme, /initial position, response, revision, and final consensus rounds/);
 assert.match(readme, /adversarial initial position/);
@@ -143,6 +168,8 @@ assert.match(readme, /discussionInsufficientParticipants/);
 const rootReadme = await readFile(path.join(root, "README.md"), "utf8");
 assert.match(rootReadme, /참여 역할별 담당 요구사항/);
 assert.match(rootReadme, /책임 역할만 호출/);
+assert.match(rootReadme, /\$agent-company:deep-discussion/);
+assert.match(rootReadme, /참가자 전원이 최종 `agree`/);
 assert.match(rootReadme, /viewerUrl/);
 assert.match(rootReadme, /적대적 라운드 기반 회의/);
 assert.match(rootReadme, /최강 반대 가설과 실패 조건/);
@@ -173,6 +200,11 @@ assert.match(ceoRole, /discussionSatisfied/);
 
 const meetingProtocol = await readFile(path.join(pluginRoot, "references", "protocols", "meeting.md"), "utf8");
 assert.match(meetingProtocol, /## 라운드/);
+assert.match(meetingProtocol, /## Deep Discussion 모드/);
+assert.match(meetingProtocol, /\$agent-company:deep-discussion/);
+assert.match(meetingProtocol, /참가자 전원의 최종 `agree`/);
+assert.match(meetingProtocol, /`conditional`, `disagree`, `needs-user`는 종료 조건으로 인정하지 않는다/);
+assert.match(meetingProtocol, /`consensus\.reached`가 `conditional`을 포함해 true/);
 assert.match(meetingProtocol, /메시지 sequence 또는 id/);
 assert.match(meetingProtocol, /conditionalParticipants/);
 assert.match(meetingProtocol, /discussionSatisfied/);

@@ -186,3 +186,14 @@
 - Removed `Backend / Tooling`, `Node.js`, and JavaScript/TypeScript from the technology stack. Added `AI / Agent Tools` and `Release / Operations` sections.
 - Also narrowed BeMyPet wording by replacing serverless backend and CI claims with Supabase integration, GitHub Actions operations workflows, and scheduled Edge Function invocation.
 - Verification fetch confirmed the edited Notion content at `2026-05-25T08:37:46.526Z`.
+
+## 2026-05-27 Agent Company deep discussion skill
+
+- User wants a user-explicit Agent Company mode for open-ended discussion, not just a default change to the existing company skill.
+- User selected a separate skill rather than a slash command or option flag.
+- The selected invocation name is `deep-discussion`, so the public call should be `$agent-company:deep-discussion <goal>`.
+- The termination condition is strict all-participant agreement. `conditional`, `disagree`, and `needs-user` do not count as completion for this mode.
+- Scope is skill and documentation policy plus validation coverage. MCP tools, server APIs, runtime consensus semantics, and persisted meeting schema should remain unchanged.
+- Implemented `plugins/agent-company/skills/deep-discussion/SKILL.md` with no fixed round count, strict final `agree` termination, conditional re-discussion, and unresolved user-choice handling.
+- Updated README files and meeting protocol docs to show `$agent-company:deep-discussion` as the explicit invocation.
+- Verification passed with `npm run validate`, `npm test` after rerunning outside the sandbox for local `127.0.0.1` bind permission, and `git diff --check`.

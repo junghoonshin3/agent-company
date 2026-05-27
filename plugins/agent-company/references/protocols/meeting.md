@@ -31,6 +31,14 @@
 
 참가자가 한 명뿐인 회의는 상호 반박 라운드를 생략할 수 있지만, 최강 반대 가설과 실패 조건은 생략하지 않는다. 여러 참가자가 있는 회의에서 다른 직원 발언을 참조하지 않았거나 실질 반박이 없는 최종 `agree`는 충분한 합의 근거로 보지 않는다.
 
+## Deep Discussion 모드
+
+사용자가 `$agent-company:deep-discussion`을 명시적으로 호출하면 CEO는 고정 라운드 수를 정하지 않는다. 브리핑, 초기 입장, 상호 반박, 합의 시도 구조는 유지하되, 쟁점이 남아 있으면 추가 반박과 재검토를 계속 요청한다.
+
+Deep Discussion 모드의 종료 조건은 참가자 전원의 최종 `agree`다. `conditional`, `disagree`, `needs-user`는 종료 조건으로 인정하지 않는다. `conditionalParticipants`가 남아 있거나 일반 런타임의 `consensus.reached`가 `conditional`을 포함해 true가 되더라도 CEO는 회의를 닫지 않는다.
+
+`conditional`이 남으면 CEO는 해당 조건을 다시 토론에 올려 공동 기준으로 흡수하고 전원 `agree`로 바꾸도록 조율한다. `disagree`나 `needs-user`가 유지되면 CEO는 해결 가능한 쟁점은 계속 토론시키고, 사용자 결정이 필요한 쟁점은 선택지와 근거를 정리해 사용자에게 질문한다.
+
 ## 합의
 
 - 모든 필수 참가자가 `agree` 또는 `conditional` 입장을 남기고 runtime `discussionSatisfied`가 true이면 잠정 합의로 본다.
