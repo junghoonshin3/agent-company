@@ -128,6 +128,10 @@ export interface ConsensusSnapshot {
   positions: Partial<Record<RoleId, ConsensusPosition>>;
   reached: boolean;
   blockers: RoleId[];
+  conditionalParticipants: RoleId[];
+  missingParticipants: RoleId[];
+  discussionSatisfied: boolean;
+  discussionInsufficientParticipants: RoleId[];
 }
 
 export interface MeetingConnection {

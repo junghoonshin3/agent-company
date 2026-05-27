@@ -65,6 +65,19 @@ assert.match(skill, /multi-target wait/);
 assert.match(skill, /Responsible Role Selection/);
 assert.match(skill, /owned requirement/);
 assert.match(skill, /Do not invite roles for general review/);
+assert.match(skill, /Round-Based Discussion/);
+assert.match(skill, /adversarial but constructive/);
+assert.match(skill, /strongest counterargument/);
+assert.match(skill, /failure condition/);
+assert.match(skill, /substantive challenge/);
+assert.match(skill, /Initial position round/);
+assert.match(skill, /Response round/);
+assert.match(skill, /Revision round/);
+assert.match(skill, /Final consensus round/);
+assert.match(skill, /message sequence or message id/);
+assert.match(skill, /conditionalParticipants/);
+assert.match(skill, /discussionSatisfied/);
+assert.match(skill, /discussionInsufficientParticipants/);
 assert.match(skill, /create_meeting/);
 assert.match(skill, /meeting_status/);
 assert.match(skill, /post_message/);
@@ -75,6 +88,28 @@ assert.match(skill, /Immediately share the read-only browser `viewerUrl`/);
 assert.match(skill, /URL contains a local meeting token/);
 for (const term of forbiddenRuntimeTerms) {
   assert.doesNotMatch(skill, new RegExp(term), `skill must not reference ${term}`);
+}
+
+const deepDiscussionSkill = await readFile(
+  path.join(pluginRoot, "skills", "deep-discussion", "SKILL.md"),
+  "utf8",
+);
+assert.match(deepDiscussionSkill, /name: deep-discussion/);
+assert.match(deepDiscussionSkill, /\$agent-company:deep-discussion/);
+assert.match(deepDiscussionSkill, /Deep Discussion mode/);
+assert.match(deepDiscussionSkill, /no pre-set round limit/);
+assert.match(deepDiscussionSkill, /all required participants posting final `agree`/);
+assert.match(deepDiscussionSkill, /`conditional`, `disagree`, and `needs-user` never count as completion/);
+assert.match(deepDiscussionSkill, /runtime may mark `consensus\.reached` true/);
+assert.match(deepDiscussionSkill, /Every required participant's latest consensus position is `agree`/);
+assert.match(deepDiscussionSkill, /discussionSatisfied/);
+assert.match(deepDiscussionSkill, /discussionInsufficientParticipants/);
+assert.match(deepDiscussionSkill, /conditionalParticipants/);
+assert.match(deepDiscussionSkill, /create_meeting/);
+assert.match(deepDiscussionSkill, /meeting_status/);
+assert.match(deepDiscussionSkill, /viewerUrl/);
+for (const term of forbiddenRuntimeTerms) {
+  assert.doesNotMatch(deepDiscussionSkill, new RegExp(term), `deep discussion skill must not reference ${term}`);
 }
 
 const runtime = await readFile(path.join(pluginRoot, "server", "src", "runtime.ts"), "utf8");
@@ -94,6 +129,10 @@ assert.match(types, /MeetingConnection/);
 assert.match(types, /DiscussionServerState/);
 assert.match(types, /LegacyState/);
 assert.match(types, /viewerUrl/);
+assert.match(types, /conditionalParticipants/);
+assert.match(types, /missingParticipants/);
+assert.match(types, /discussionSatisfied/);
+assert.match(types, /discussionInsufficientParticipants/);
 
 const discussionServer = await readFile(path.join(pluginRoot, "server", "src", "discussion-server.ts"), "utf8");
 assert.match(discussionServer, /createServer/);
@@ -115,12 +154,28 @@ const readme = await readFile(path.join(pluginRoot, "README.md"), "utf8");
 assert.match(readme, /Codex native sub-agents/);
 assert.match(readme, /\.agent-company\/v2/);
 assert.match(readme, /The old tmux task tools were removed in v2/);
+assert.match(readme, /\$agent-company:deep-discussion/);
+assert.match(readme, /all-participant `agree` termination/);
+assert.match(readme, /conditional` does not count as completion/);
 assert.match(readme, /viewerUrl/);
+assert.match(readme, /initial position, response, revision, and final consensus rounds/);
+assert.match(readme, /adversarial initial position/);
+assert.match(readme, /substantive challenge, failure condition, or conditional objection/);
+assert.match(readme, /conditionalParticipants/);
+assert.match(readme, /discussionSatisfied/);
+assert.match(readme, /discussionInsufficientParticipants/);
 
 const rootReadme = await readFile(path.join(root, "README.md"), "utf8");
 assert.match(rootReadme, /참여 역할별 담당 요구사항/);
 assert.match(rootReadme, /책임 역할만 호출/);
+assert.match(rootReadme, /\$agent-company:deep-discussion/);
+assert.match(rootReadme, /참가자 전원이 최종 `agree`/);
 assert.match(rootReadme, /viewerUrl/);
+assert.match(rootReadme, /적대적 라운드 기반 회의/);
+assert.match(rootReadme, /최강 반대 가설과 실패 조건/);
+assert.match(rootReadme, /조건부 동의 조건/);
+assert.match(rootReadme, /discussionSatisfied/);
+assert.match(rootReadme, /반박 부족/);
 
 const delegationRouting = await readFile(
   path.join(pluginRoot, "references", "protocols", "delegation-routing.md"),
@@ -130,10 +185,39 @@ assert.match(delegationRouting, /요구사항 책임 소유자 기반의 최소 
 assert.match(delegationRouting, /역할 소유권 표를 참가자 선택 기준으로 사용한다/);
 assert.match(delegationRouting, /관성적 전체 호출/);
 assert.match(delegationRouting, /CEO 단독 처리 불가 이유/);
+assert.match(delegationRouting, /브리핑, 초기 입장, 상호 반박, 입장 수정, 최종 합의 라운드/);
+assert.match(delegationRouting, /메시지 sequence 또는 id/);
+assert.match(delegationRouting, /생산적 반대/);
+assert.match(delegationRouting, /반박 없는 즉시 동의/);
 
 const ceoRole = await readFile(path.join(pluginRoot, "references", "roles", "ceo.md"), "utf8");
 assert.match(ceoRole, /요구사항 책임 소유자 기반의 최소 조합/);
 assert.match(ceoRole, /단순 참고나 관성적 검토/);
+assert.match(ceoRole, /상호 반박, 입장 수정, 최종 합의 라운드/);
+assert.match(ceoRole, /조건부 참가자/);
+assert.match(ceoRole, /반박 없는 즉시 동의/);
+assert.match(ceoRole, /discussionSatisfied/);
+
+const meetingProtocol = await readFile(path.join(pluginRoot, "references", "protocols", "meeting.md"), "utf8");
+assert.match(meetingProtocol, /## 라운드/);
+assert.match(meetingProtocol, /## Deep Discussion 모드/);
+assert.match(meetingProtocol, /\$agent-company:deep-discussion/);
+assert.match(meetingProtocol, /참가자 전원의 최종 `agree`/);
+assert.match(meetingProtocol, /`conditional`, `disagree`, `needs-user`는 종료 조건으로 인정하지 않는다/);
+assert.match(meetingProtocol, /`consensus\.reached`가 `conditional`을 포함해 true/);
+assert.match(meetingProtocol, /메시지 sequence 또는 id/);
+assert.match(meetingProtocol, /conditionalParticipants/);
+assert.match(meetingProtocol, /discussionSatisfied/);
+assert.match(meetingProtocol, /discussionInsufficientParticipants/);
+assert.match(meetingProtocol, /생산적 반대/);
+assert.match(meetingProtocol, /최강 반대 가설/);
+assert.match(meetingProtocol, /즉시 전원 동의/);
+
+const outputContracts = await readFile(path.join(pluginRoot, "references", "protocols", "output-contracts.md"), "utf8");
+assert.match(outputContracts, /상호 반박 메시지/);
+assert.match(outputContracts, /참조한 메시지 sequence 또는 id/);
+assert.match(outputContracts, /최강 반대 가설/);
+assert.match(outputContracts, /주요 전제에 대한 반박/);
 
 const roleFiles = await readdir(path.join(pluginRoot, "references", "roles"));
 for (const fileName of roleFiles.filter((file) => file.endsWith(".md"))) {
@@ -141,6 +225,10 @@ for (const fileName of roleFiles.filter((file) => file.endsWith(".md"))) {
   assert.match(content, /## 역할 목적/);
   assert.match(content, /## 작업 절차/);
   assert.match(content, /## 품질 기준/);
+  if (fileName !== "ceo.md") {
+    assert.match(content, /참조한 다른 직원 메시지/);
+    assert.match(content, /실질 반박/);
+  }
 }
 
 const pluginFiles = await collectFiles(pluginRoot);

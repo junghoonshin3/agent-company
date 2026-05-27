@@ -89,6 +89,12 @@ test("meeting messages track consensus and decisions", async () => {
     message: "코어 런타임 우선에 동의한다.",
     position: "agree",
   }, dir);
+  const partialStatus = await runtime.meetingStatus({ meeting_id: created.meeting.id }, dir);
+  assert.equal(partialStatus.consensus.reached, false);
+  assert.deepEqual(partialStatus.consensus.missingParticipants, ["architect"]);
+  assert.equal(partialStatus.consensus.discussionSatisfied, false);
+  assert.deepEqual(partialStatus.consensus.discussionInsufficientParticipants, ["service-planner", "architect"]);
+
   await runtime.postMessage({
     meeting_id: created.meeting.id,
     role: "architect",
@@ -100,8 +106,46 @@ test("meeting messages track consensus and decisions", async () => {
   const status = await runtime.meetingStatus({ meeting_id: created.meeting.id }, dir);
   assert.equal(status.messages.length, 3);
   assert.equal(status.nextSequence, 4);
-  assert.equal(status.consensus.reached, true);
+  assert.equal(status.consensus.reached, false);
   assert.deepEqual(status.consensus.blockers, []);
+  assert.deepEqual(status.consensus.conditionalParticipants, ["architect"]);
+  assert.deepEqual(status.consensus.missingParticipants, []);
+  assert.equal(status.consensus.discussionSatisfied, false);
+  assert.deepEqual(status.consensus.discussionInsufficientParticipants, ["service-planner", "architect"]);
+
+  await runtime.postMessage({
+    meeting_id: created.meeting.id,
+    role: "service-planner",
+    kind: "reply",
+    message: "architect의 HTTP 회의 서버 조건을 반영하면 코어 우선 범위가 유지된다.",
+  }, dir);
+  await runtime.postMessage({
+    meeting_id: created.meeting.id,
+    role: "service-planner",
+    kind: "consensus",
+    message: "HTTP 회의 서버 조건을 보존하는 선에서 코어 런타임 우선에 동의한다.",
+    position: "agree",
+  }, dir);
+  await runtime.postMessage({
+    meeting_id: created.meeting.id,
+    role: "architect",
+    kind: "reply",
+    message: "service-planner의 범위 제한에 동의하되 HTTP 회의 서버는 첫 범위에 포함해야 한다.",
+  }, dir);
+  await runtime.postMessage({
+    meeting_id: created.meeting.id,
+    role: "architect",
+    kind: "consensus",
+    message: "HTTP 회의 서버를 포함한다는 조건으로 동의한다.",
+    position: "conditional",
+  }, dir);
+
+  const discussedStatus = await runtime.meetingStatus({ meeting_id: created.meeting.id }, dir);
+  assert.equal(discussedStatus.messages.length, 7);
+  assert.equal(discussedStatus.nextSequence, 8);
+  assert.equal(discussedStatus.consensus.reached, true);
+  assert.equal(discussedStatus.consensus.discussionSatisfied, true);
+  assert.deepEqual(discussedStatus.consensus.discussionInsufficientParticipants, []);
 
   const closed = await runtime.closeMeeting({
     meeting_id: created.meeting.id,
@@ -157,6 +201,7 @@ test("discussion HTTP server requires token and records employee messages", asyn
     assert.match(viewerHtml, /Agent Company Meeting/);
     assert.match(viewerHtml, new RegExp(`"meetingId":"${meeting.id}"`));
     assert.match(viewerHtml, /회의 발언/);
+    assert.match(viewerHtml, /반박 부족/);
 
     const created = await fetch(messagesUrl, {
       method: "POST",
@@ -182,6 +227,10 @@ test("discussion HTTP server requires token and records employee messages", asyn
     const body = await listed.json();
     assert.equal(body.messages.length, 1);
     assert.equal(body.consensus.reached, true);
+    assert.deepEqual(body.consensus.conditionalParticipants, []);
+    assert.deepEqual(body.consensus.missingParticipants, []);
+    assert.equal(body.consensus.discussionSatisfied, true);
+    assert.deepEqual(body.consensus.discussionInsufficientParticipants, []);
   } finally {
     await new Promise<void>((resolve) => server.close(() => resolve()));
     await rm(dir, { recursive: true, force: true });

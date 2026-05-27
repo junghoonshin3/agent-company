@@ -495,7 +495,14 @@ export function renderMeetingViewerHtml(input: { meetingId: string; roleTitles: 
       document.title = meeting.title + " - Agent Company";
       elements.goal.textContent = meeting.goal;
       elements.status.textContent = stateLabels[meeting.status] || meeting.status;
-      elements.consensus.textContent = consensus.reached ? "완료" : "진행 중";
+      const conditionalCount = consensus.conditionalParticipants ? consensus.conditionalParticipants.length : 0;
+      const positionConsensusReached = consensus.requiredParticipants.every((role) => {
+        const position = consensus.positions[role];
+        return position === "agree" || position === "conditional";
+      });
+      elements.consensus.textContent = consensus.reached
+        ? (conditionalCount > 0 ? "조건 검토 필요" : "완료")
+        : (positionConsensusReached && consensus.discussionSatisfied === false ? "반박 부족" : "진행 중");
       elements.updatedAt.textContent = formatTime(meeting.updatedAt);
       elements.count.textContent = messages.length + "개";
 

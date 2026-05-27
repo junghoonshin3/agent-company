@@ -71,3 +71,146 @@ Agent Company v2의 특정 회의 하나를 브라우저에서 실시간으로 �
 - `npm run check`
 - `git diff --check`
 - 로컬 브라우저에서 viewer URL 화면을 확인한다.
+
+## 2026-05-23 Round-Based Meeting Protocol Plan
+
+### Summary
+
+Agent Company 회의를 단순 의견 취합이 아니라 비동기 심의 회의에 가깝게 바꾼다. 직원은 초기 입장, 상호 반박, 입장 수정, 최종 합의 라운드를 거치고, 최종 발언은 다른 직원 메시지 sequence를 참조해야 한다.
+
+### Assumptions
+
+- 완전한 실시간 대화는 목표가 아니며, 로컬 HTTP 회의 서버에 남는 메시지를 기반으로 한 다회차 비동기 토론을 목표로 한다.
+- `conditional`은 동의로 뭉개지지 않아야 하며, 런타임 상태와 CEO 지침에서 조건부 입장을 별도로 드러내야 한다.
+- 이번 변경은 기존 MCP API를 깨지 않는 선에서 한다. 구조화된 조건 필드는 추가하지 않고, 조건은 consensus 메시지 본문에 명시하게 한다.
+
+### Scope
+
+- CEO skill에 라운드 기반 회의 절차와 메시지 참조 의무를 추가한다.
+- 회의, 출력, 라우팅, CEO 역할 프로토콜에 같은 절차를 반영한다.
+- 런타임 consensus snapshot에 조건부 참가자와 미응답 참가자를 노출한다.
+- viewer와 테스트를 새 consensus snapshot에 맞춘다.
+- validation script가 새 회의 절차 핵심 문구를 검증하게 한다.
+
+### Verification
+
+- `npm run validate`
+- `npm test`
+- `npm run check`
+- `git diff --check`
+
+## 2026-05-23 Adversarial Meeting Protocol Plan
+
+### Summary
+
+Agent Company 회의가 너무 빠르게 동의로 수렴하지 않도록 토론 규칙을 강화한다. 각 직원은 자기 역할의 권장안뿐 아니라 반대 가설, 실패 조건, 다른 직원 주장에 대한 구체적 반박을 남겨야 하며, CEO는 반박 없는 `agree`를 최종 합의로 받아들이지 않는다.
+
+### Scope
+
+- CEO skill에 적대적 검토 원칙과 합의 전 반박 의무를 추가한다.
+- 회의 프로토콜과 위임 라우팅 문서에 반대 가설, 실패 조건, 반박 기준을 추가한다.
+- 직원 역할 문서의 완료 기준에 “최소 하나의 실질 반박 또는 조건부 반대”를 반영한다.
+- validation script가 새 적대적 회의 규칙을 검증하게 한다.
+- MCP API와 회의 저장 형식은 변경하지 않는다.
+
+### Verification
+
+- `npm run validate`
+- `npm test`
+- `git diff --check`
+
+## 2026-05-23 Runtime Discussion Sufficiency Plan
+
+### Summary
+
+Agent Company consensus snapshot에 구조적 토론 충족 여부를 추가한다. 다중 참가자 회의에서 반박 라운드 없이 전원이 동의하면 `consensus.reached`를 false로 유지하고 viewer에는 반박 부족 상태를 표시한다.
+
+### Scope
+
+- `ConsensusSnapshot`에 `discussionSatisfied`와 `discussionInsufficientParticipants`를 추가한다.
+- 다중 참가자 회의는 참가자별 최종 position 전에 다른 참가자 발언 이후의 `reply`가 있어야 토론 충족으로 본다.
+- 단일 참가자 회의는 상호 반박이 불가능하므로 토론 충족으로 본다.
+- viewer, README, validation, tests를 새 snapshot 의미에 맞춘다.
+- 메시지 의미 분석은 하지 않고 `kind`, `role`, `sequence` 기반 구조 판정만 한다.
+
+### Verification
+
+- `npm run validate`
+- `npm test`
+- `npm run check`
+- `git diff --check`
+
+## 2026-05-25 Notion Resume Agent Company Update Plan
+
+### Summary
+
+Notion 이력서 페이지에 Agent Company 개인 프로젝트 경험을 추가한다. 기존 이력서 톤을 유지하고, 과장된 지표 없이 실제 프로젝트 성격과 구현 범위를 설명한다.
+
+### Scope
+
+- 자기소개에 Agent Company 경험을 한 문장 추가한다.
+- 개인 프로젝트 섹션 최상단에 Agent Company 항목을 추가한다.
+- 기술 스택에 Agent Company에서 사용한 Node.js, MCP, 로컬 HTTP 서버, JSONL 기반 기록, Codex sub-agent 관련 키워드를 추가한다.
+- 실무 경력과 기존 개인 프로젝트 내용은 수정하지 않는다.
+
+### Verification
+
+- Notion MCP `fetch`로 수정 전후 페이지 내용을 확인한다.
+- `git diff --check`로 로컬 인수인계 문서 변경을 확인한다.
+
+## 2026-05-25 Notion Resume Self Introduction Polish Plan
+
+### Summary
+
+Notion 이력서의 자기소개 섹션에서 애매하거나 내부자에게만 이해되는 표현을 줄이고, 채용 담당자가 빠르게 이해할 수 있는 강점 중심 문장으로 다듬는다.
+
+### Scope
+
+- 자기소개 섹션만 수정한다.
+- 실서비스 안정화, 외부 SDK/Native 연동, 데이터 신뢰성, 위치/백그라운드 처리, 최근 개인 프로젝트 확장 경험을 명확히 드러낸다.
+- 기존 성과 수치인 헬스 데이터 누락 30% 이상 감소, 출시 3개월 내 25만 명, 승·하차 오차 2~3m 수준 개선은 유지한다.
+- 실무 프로젝트와 개인 프로젝트 상세 항목은 수정하지 않는다.
+
+### Verification
+
+- Notion MCP `fetch`로 수정 전후 자기소개 내용을 확인한다.
+- `git diff --check`로 로컬 인수인계 문서 변경을 확인한다.
+
+## 2026-05-25 Notion Resume Verified Skills Cleanup Plan
+
+### Summary
+
+Notion 이력서에서 배포 자동화와 기술 스택 표현을 실제 확인 가능한 범위로 좁힌다. 백엔드나 Node.js 숙련처럼 오해될 수 있는 표현은 제거하고, Codex용 AI 에이전트 플러그인 경험은 별도 AI 섹션으로 정리한다.
+
+### Scope
+
+- 자기소개의 `배포 자동화` 표현을 수동 실행 가능한 GitHub Actions/Fastlane 배포 파이프라인 경험으로 수정한다.
+- Pause it의 배포 관련 담당 역할과 성과를 `workflow_dispatch` 기반 수동 실행 파이프라인으로 수정한다.
+- 기술 스택에서 `Backend / Tooling`, `Node.js`, 백엔드 숙련으로 읽히는 항목을 제거한다.
+- 기술 스택에 `AI / Agent Tools` 섹션을 추가해 Codex MCP 기반 에이전트 플러그인 개발 경험을 표현한다.
+
+### Verification
+
+- GitHub 공개 저장소의 `pause_it` workflow와 Fastlane 설정으로 배포 파이프라인 표현을 확인한다.
+- Notion MCP `fetch`로 수정 후 이력서 내용을 확인한다.
+- `git diff --check`로 로컬 인수인계 문서 변경을 확인한다.
+
+## 2026-05-27 Agent Company Deep Discussion Skill Plan
+
+### Summary
+
+Agent Company에 `$agent-company:deep-discussion` 별도 스킬을 추가한다. 이 스킬은 기존 MCP 런타임을 그대로 쓰면서, 고정 라운드 수 없이 참가자 전원이 최종 `agree`에 도달할 때만 CEO가 회의를 닫는 명시 호출 모드로 동작한다.
+
+### Scope
+
+- `plugins/agent-company/skills/deep-discussion/SKILL.md`를 새로 추가한다.
+- 기존 `$agent-company:company` 스킬과 MCP 도구, 서버 API, 상태 타입은 변경하지 않는다.
+- README와 플러그인 README에 새 호출 예시를 추가한다.
+- 회의 프로토콜 문서에 deep discussion 모드의 전원 `agree` 종료 조건을 기록한다.
+- 검증 스크립트에 새 스킬과 전원 `agree` 정책 확인을 추가한다.
+
+### Verification
+
+- `npm run validate`
+- `npm test`
+- `git diff --check`

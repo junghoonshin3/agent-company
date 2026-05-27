@@ -105,3 +105,77 @@
 - [x] Add validation coverage for the mandatory sharing rule.
 - [x] Run verification.
 - [ ] Commit the logical change.
+
+## 2026-05-23 round-based meeting protocol
+
+- [x] Record the implementation plan, checklist, and context notes.
+- [x] Update CEO and employee-facing protocol guidance for round-based discussion.
+- [x] Expose conditional and missing participants in consensus snapshots.
+- [x] Update viewer/test/validation coverage for the new consensus semantics.
+- [x] Run verification commands and fix failures.
+- [x] Commit the logical change.
+
+## 2026-05-23 adversarial meeting protocol
+
+- [x] Inspect current CEO skill, meeting protocol, delegation routing, role manuals, and validation coverage.
+- [x] Record the implementation plan, checklist, and context notes.
+- [x] Add adversarial discussion rules to the CEO skill.
+- [x] Update meeting and delegation protocols with opposition and failure-condition requirements.
+- [x] Update employee role completion criteria.
+- [x] Add validation coverage for adversarial meeting guidance.
+- [x] Run verification commands and fix failures.
+- [x] Commit the logical change.
+
+## 2026-05-23 runtime discussion sufficiency
+
+- [x] Inspect consensus snapshot type, computeConsensus, viewer rendering, and tests.
+- [x] Record the implementation plan, checklist, and context notes.
+- [x] Add runtime discussion sufficiency fields and reached gating.
+- [x] Update viewer, README, and validation coverage.
+- [x] Add tests for insufficient and sufficient discussion.
+- [x] Run verification commands and fix failures.
+- [x] Commit the logical change.
+
+## 2026-05-25 README meeting dashboard demo
+
+- [x] Record the implementation plan, checklist, and context notes.
+- [x] Run an actual Agent Company employee meeting for the demo source.
+- [x] Capture the meeting viewer without exposing the local token.
+- [x] Create `plugins/agent-company/assets/agent-company-meeting-demo.gif`.
+- [x] Embed the demo GIF in the root README.
+- [x] Run focused verification.
+- [x] Commit the logical change.
+
+## 2026-05-25 Notion resume Agent Company update
+
+- [x] Record the implementation plan, checklist, and context notes.
+- [x] Connect Notion MCP to Codex with OAuth.
+- [x] Read the target Notion resume page through MCP.
+- [x] Add the Agent Company project content to the resume.
+- [x] Verify the edited Notion page content.
+
+## 2026-05-25 Notion resume self introduction polish
+
+- [x] Record the implementation plan, checklist, and context notes.
+- [x] Read the current Notion resume self-introduction.
+- [x] Rewrite ambiguous phrasing into recruiter-readable strengths.
+- [x] Verify the edited Notion page content.
+
+## 2026-05-25 Notion resume verified skills cleanup
+
+- [x] Record the implementation plan, checklist, and context notes.
+- [x] Verify the actual Pause it deployment workflow and Fastlane setup.
+- [x] Update self-introduction deployment wording.
+- [x] Update Pause it deployment role and achievement wording.
+- [x] Replace uncertain backend/Node.js stack items with confirmed AI agent tooling items.
+- [x] Verify the edited Notion page content.
+
+## 2026-05-27 Agent Company deep discussion skill
+
+- [x] Inspect current skill, README files, meeting protocol, and validation script.
+- [x] Record the implementation plan, checklist, and context notes.
+- [x] Add the `deep-discussion` skill with all-agree termination rules.
+- [x] Document the new `$agent-company:deep-discussion` invocation.
+- [x] Add validation coverage for the new skill and all-agree policy.
+- [x] Run verification commands and fix failures.
+- [x] Commit the logical change.
