@@ -53,6 +53,23 @@ $agent-company:deep-discussion TODO 앱의 유료화 정책을 직원들이 전�
 
 CEO는 먼저 실행 계획을 제안합니다. 사용자가 승인하면 `start_company`, `create_meeting`, 직원 sub-agent 실행, `meeting_status` 모니터링, `close_meeting` 순서로 회의를 진행합니다.
 
+## Deep Discussion 모드
+
+`$agent-company:deep-discussion`은 사용자가 명시적으로 호출하는 장기 토론 모드입니다. 표준 회의처럼 CEO Plan Mode와 사용자 승인 절차를 거치지만, 고정 라운드 수를 두지 않고 참가자 전원이 최종 `agree`에 도달할 때까지 토론을 이어갑니다.
+
+```text
+$agent-company:deep-discussion 새 온보딩 플로우를 어떤 구조로 가져갈지 직원들이 전원 동의할 때까지 토론해줘
+```
+
+| 구분 | 표준 `$agent-company:company` | `$agent-company:deep-discussion` |
+| --- | --- | --- |
+| 회의 흐름 | 브리핑, 초기 입장, 상호 반박, 입장 수정, 최종 합의 라운드 중심 | 최소 구조만 유지하고 쟁점이 남으면 추가 반박과 재검토를 계속 진행 |
+| 종료 조건 | `agree` 또는 `conditional`과 토론 충족 상태를 기반으로 CEO가 조건을 보존해 종료 | 참가자 전원이 최종 `agree`를 남길 때만 종료 |
+| `conditional` 처리 | 조건을 최종 합의와 다음 액션에 보존하면 잠정 합의 가능 | 완료로 보지 않고 조건을 다시 토론에 올려 전원 `agree`로 전환 |
+| 사용자 개입 | 재료가 부족하거나 결정이 필요하면 CEO가 질문 | `needs-user`나 해결 불가능한 선택지가 남으면 CEO가 멈추고 선택지를 보고 |
+
+이 모드는 제품 방향, 정책, 아키텍처처럼 역할 간 관점 차이를 끝까지 좁혀야 하는 결정에 적합합니다. 단순 구현 작업이나 빠른 검토는 표준 `$agent-company:company`가 더 가볍습니다.
+
 ## 회의 대시보드 데모
 
 `viewerUrl`을 열면 직원 에이전트들의 발언, 반박, 조건부 합의가 읽기 전용 타임라인으로 표시됩니다. 아래 데모는 실제 Agent Company 회의 기록을 캡처한 것입니다.

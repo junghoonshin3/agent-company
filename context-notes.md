@@ -197,3 +197,9 @@
 - Implemented `plugins/agent-company/skills/deep-discussion/SKILL.md` with no fixed round count, strict final `agree` termination, conditional re-discussion, and unresolved user-choice handling.
 - Updated README files and meeting protocol docs to show `$agent-company:deep-discussion` as the explicit invocation.
 - Verification passed with `npm run validate`, `npm test` after rerunning outside the sandbox for local `127.0.0.1` bind permission, and `git diff --check`.
+
+## 2026-05-27 README deep discussion feature section
+
+- User asked to add the feature to README and then push, commit, and merge.
+- Root README already had a feature bullet and quick-start example, but it did not have a dedicated section explaining when to use deep discussion or how it differs from standard mode.
+- Scope is documentation only. No runtime, MCP, or skill behavior changes are needed.
