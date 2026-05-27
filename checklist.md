@@ -179,3 +179,11 @@
 - [x] Add validation coverage for the new skill and all-agree policy.
 - [x] Run verification commands and fix failures.
 - [x] Commit the logical change.
+
+## 2026-05-27 README deep discussion feature section
+
+- [x] Inspect current README coverage for deep discussion.
+- [x] Record the implementation plan, checklist, and context notes.
+- [x] Add a dedicated root README feature section.
+- [x] Run focused validation.
+- [x] Commit, push, open PR, and merge through PR.

@@ -214,3 +214,20 @@ Agent Company에 `$agent-company:deep-discussion` 별도 스킬을 추가한다.
 - `npm run validate`
 - `npm test`
 - `git diff --check`
+
+## 2026-05-27 README Deep Discussion Feature Section Plan
+
+### Summary
+
+루트 README에 `$agent-company:deep-discussion` 기능을 별도 섹션으로 보강한다. 기존 한 줄 소개와 빠른 시작 예시만으로는 표준 회의와의 차이가 약하므로, 호출 방식, 종료 조건, 표준 모드와의 차이를 채용 담당자가 아니라 플러그인 사용자가 바로 이해할 수 있게 정리한다.
+
+### Scope
+
+- 루트 `README.md`에 `Deep Discussion 모드` 섹션을 추가한다.
+- 기존 `$agent-company:company` 표준 모드 설명은 유지한다.
+- 코드, MCP API, 스킬 파일은 변경하지 않는다.
+
+### Verification
+
+- `npm run validate`
+- `git diff --check`
