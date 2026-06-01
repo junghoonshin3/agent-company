@@ -3,12 +3,12 @@
   "version": "0.2.0",
   "description": "Run a CEO-led product team with Codex sub-agents and a local discussion server.",
   "author": {
-    "name": "AgentInc",
-    "email": "agentinc@example.com",
-    "url": "https://example.com/agentinc"
+    "name": "Shin JungHoon",
+    "email": "42196666+junghoonshin3@users.noreply.github.com",
+    "url": "https://github.com/junghoonshin3"
   },
-  "homepage": "https://example.com/agent-company",
-  "repository": "https://example.com/agent-company.git",
+  "homepage": "https://github.com/junghoonshin3/agent-company",
+  "repository": "https://github.com/junghoonshin3/agent-company.git",
   "license": "MIT",
   "keywords": [
     "codex",
@@ -22,16 +22,16 @@
     "displayName": "Agent Company",
     "shortDescription": "Coordinate a CEO-led team of Codex sub-agents.",
     "longDescription": "Agent Company turns the current Codex session into a CEO that plans with the user, starts selected Codex sub-agent employees, lets them discuss through a project-local HTTP meeting server, and records consensus, decisions, verification, risks, and next actions.",
-    "developerName": "AgentInc",
+    "developerName": "Shin JungHoon",
     "category": "Productivity",
     "capabilities": [
       "Interactive",
       "Read",
       "Write"
     ],
-    "websiteURL": "https://example.com/agent-company",
-    "privacyPolicyURL": "https://example.com/privacy",
-    "termsOfServiceURL": "https://example.com/terms",
+    "websiteURL": "https://github.com/junghoonshin3/agent-company",
+    "privacyPolicyURL": "https://github.com/junghoonshin3/agent-company#privacy",
+    "termsOfServiceURL": "https://github.com/junghoonshin3/agent-company#license",
     "defaultPrompt": [
       "Agent Company CEO로 이 작업 계획을 먼저 세워줘.",
       "필요한 직원 에이전트를 골라 회의를 진행해줘.",

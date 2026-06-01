@@ -1,7 +1,7 @@
 {
   "name": "agent-company-plugin",
   "interface": {
-    "displayName": "AgentInc Local Plugins"
+    "displayName": "Agent Company Plugins"
   },
   "plugins": [
     {

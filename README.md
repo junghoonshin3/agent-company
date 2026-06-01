@@ -26,17 +26,18 @@ Agent Company는 Codex 안에서 CEO 주도의 작은 제품 팀을 운영하기
 
 ## 빠른 시작
 
-의존성을 설치하고 플러그인을 검증합니다.
+공개 GitHub marketplace를 Codex에 추가하고 플러그인을 설치합니다.
 
 ```sh
-npm install
-npm run check
+codex plugin marketplace add junghoonshin3/agent-company --ref main
+codex plugin add agent-company@agent-company-plugin
 ```
 
-Codex 플러그인으로 설치합니다.
+업데이트를 받을 때는 marketplace를 새로고침한 뒤 다시 설치합니다.
 
 ```sh
-codex plugin add agent-company@agentinc-local
+codex plugin marketplace upgrade agent-company-plugin
+codex plugin add agent-company@agent-company-plugin
 ```
 
 Codex 세션에서 다음처럼 스킬을 호출합니다.
@@ -153,6 +154,7 @@ cat .agent-company/v2/meetings/<meeting_id>/messages.jsonl
 ## 개발 명령
 
 ```sh
+npm install
 npm run validate
 npm test
 npm run check
@@ -180,6 +182,10 @@ Agent Company v2는 직원 실행 전에 사용자 승인을 요구합니다. �
 
 구현 작업이 필요한 경우 직원은 별도 sub-agent workspace에서 패치 제안을 만들고, CEO가 검토한 뒤 현재 프로젝트에 통합합니다.
 
-## 라이선스
+## License
 
-아직 별도 라이선스 파일은 포함하지 않았습니다. 공개 저장소로 열려 있더라도 사용, 수정, 재배포 조건은 라이선스가 추가되기 전까지 명시적으로 부여되지 않습니다.
+MIT 라이선스입니다. 자세한 내용은 [LICENSE](LICENSE)를 확인합니다.
+
+## Privacy
+
+Agent Company는 회의 기록과 결정 내용을 사용자의 로컬 프로젝트 안에 `.agent-company/v2` 파일로 저장합니다. 플러그인 자체는 외부 서버로 데이터를 전송하지 않습니다.
