@@ -193,6 +193,6 @@
 - [x] Inspect current local and remote branch state.
 - [x] Record the implementation plan, checklist, and context notes.
 - [x] Run verification commands.
-- [ ] Commit the workflow notes if verification passes.
-- [ ] Push current `main` to `origin/main`.
-- [ ] Confirm local and remote branch state after push.
+- [x] Commit the workflow notes if verification passes.
+- [x] Push current `main` to `origin/main`.
+- [x] Confirm local and remote branch state after push.
