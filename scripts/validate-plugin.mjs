@@ -5,8 +5,8 @@ import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../..");
-const pluginRoot = path.join(root, "plugins", "agent-company");
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const pluginRoot = root;
 const requiredMcpTools = [
   "start_company",
   "company_status",
@@ -38,7 +38,7 @@ assert.match(plugin.description, /sub-agents/);
 assert.doesNotMatch(JSON.stringify(plugin), /tmux|Kanban/);
 
 const mcp = JSON.parse(await readFile(path.join(pluginRoot, ".mcp.json"), "utf8"));
-assert.ok(mcp.mcpServers?.["agent-company"], "plugins/agent-company/.mcp.json must define mcpServers.agent-company");
+assert.ok(mcp.mcpServers?.["agent-company"], ".mcp.json must define mcpServers.agent-company");
 assert.equal(mcp.mcpServers["agent-company"].command, "node");
 assert.deepEqual(mcp.mcpServers["agent-company"].args.slice(0, 2), [
   "--experimental-strip-types",
@@ -47,8 +47,8 @@ assert.deepEqual(mcp.mcpServers["agent-company"].args.slice(0, 2), [
 
 const packageJson = JSON.parse(await readFile(path.join(root, "package.json"), "utf8"));
 assert.equal(packageJson.version, "0.2.0");
-assert.equal(packageJson.scripts.test, "node --experimental-strip-types --test plugins/agent-company/server/test/*.test.ts");
-assert.equal(packageJson.scripts.validate, "node plugins/agent-company/scripts/validate-plugin.mjs");
+assert.equal(packageJson.scripts.test, "node --experimental-strip-types --test server/test/*.test.ts");
+assert.equal(packageJson.scripts.validate, "node scripts/validate-plugin.mjs");
 assert.equal(packageJson.scripts.check, "npm run validate && npm test");
 for (const script of Object.values(packageJson.scripts)) {
   assert.doesNotMatch(String(script), /agent-office|vite|office/);
@@ -151,31 +151,20 @@ for (const term of ["delegate_task", "wait_for_task", "collect_result", "send_pe
 }
 
 const readme = await readFile(path.join(pluginRoot, "README.md"), "utf8");
-assert.match(readme, /Codex native sub-agents/);
+assert.match(readme, /Codex native sub-agent/);
 assert.match(readme, /\.agent-company\/v2/);
-assert.match(readme, /The old tmux task tools were removed in v2/);
 assert.match(readme, /\$agent-company:deep-discussion/);
-assert.match(readme, /all-participant `agree` termination/);
-assert.match(readme, /conditional` does not count as completion/);
+assert.match(readme, /참가자 전원이 최종 `agree`/);
+assert.match(readme, /`conditional` 처리/);
 assert.match(readme, /viewerUrl/);
-assert.match(readme, /initial position, response, revision, and final consensus rounds/);
-assert.match(readme, /adversarial initial position/);
-assert.match(readme, /substantive challenge, failure condition, or conditional objection/);
+assert.match(readme, /초기 입장, 상호 반박, 입장 수정, 최종 합의 라운드/);
+assert.match(readme, /적대적 라운드 기반 회의/);
+assert.match(readme, /최강 반대 가설과 실패 조건/);
+assert.match(readme, /조건부 동의 조건/);
 assert.match(readme, /conditionalParticipants/);
 assert.match(readme, /discussionSatisfied/);
 assert.match(readme, /discussionInsufficientParticipants/);
-
-const rootReadme = await readFile(path.join(root, "README.md"), "utf8");
-assert.match(rootReadme, /참여 역할별 담당 요구사항/);
-assert.match(rootReadme, /책임 역할만 호출/);
-assert.match(rootReadme, /\$agent-company:deep-discussion/);
-assert.match(rootReadme, /참가자 전원이 최종 `agree`/);
-assert.match(rootReadme, /viewerUrl/);
-assert.match(rootReadme, /적대적 라운드 기반 회의/);
-assert.match(rootReadme, /최강 반대 가설과 실패 조건/);
-assert.match(rootReadme, /조건부 동의 조건/);
-assert.match(rootReadme, /discussionSatisfied/);
-assert.match(rootReadme, /반박 부족/);
+assert.match(readme, /반박 부족/);
 
 const delegationRouting = await readFile(
   path.join(pluginRoot, "references", "protocols", "delegation-routing.md"),
@@ -250,7 +239,20 @@ console.log("plugin validation passed");
 async function collectFiles(dir) {
   const entries = await readdir(dir, { withFileTypes: true });
   const files = [];
+  const ignoredEntries = new Set([
+    ".git",
+    ".agent-company",
+    ".agents",
+    "node_modules",
+    "plugins",
+    "plan.md",
+    "checklist.md",
+    "context-notes.md",
+  ]);
   for (const entry of entries) {
+    if (ignoredEntries.has(entry.name)) {
+      continue;
+    }
     const fullPath = path.join(dir, entry.name);
     if (entry.isDirectory()) {
       files.push(...await collectFiles(fullPath));

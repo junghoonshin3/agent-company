@@ -8,8 +8,8 @@
     "node": ">=22.12"
   },
   "scripts": {
-    "test": "node --experimental-strip-types --test plugins/agent-company/server/test/*.test.ts",
-    "validate": "node plugins/agent-company/scripts/validate-plugin.mjs",
+    "test": "node --experimental-strip-types --test server/test/*.test.ts",
+    "validate": "node scripts/validate-plugin.mjs",
     "check": "npm run validate && npm test"
   }
 }

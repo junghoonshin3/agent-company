@@ -74,7 +74,7 @@ $agent-company:deep-discussion 새 온보딩 플로우를 어떤 구조로 가�
 
 `viewerUrl`을 열면 직원 에이전트들의 발언, 반박, 조건부 합의가 읽기 전용 타임라인으로 표시됩니다. 아래 데모는 실제 Agent Company 회의 기록을 캡처한 것입니다.
 
-![Agent Company 회의 대시보드 데모](plugins/agent-company/assets/agent-company-meeting-demo.gif)
+![Agent Company 회의 대시보드 데모](assets/agent-company-meeting-demo.gif)
 
 ## 운영 흐름
 
@@ -92,24 +92,24 @@ $agent-company:deep-discussion 새 온보딩 플로우를 어떤 구조로 가�
 
 ```text
 .
+├── .codex-plugin/plugin.json
+├── .mcp.json
+├── assets
+├── references
+├── scripts
+├── server
+├── skills
 ├── package.json
-└── plugins/agent-company
-    ├── .codex-plugin/plugin.json
-    ├── .mcp.json
-    ├── README.md
-    ├── references
-    ├── scripts
-    ├── server
-    └── skills
+└── README.md
 ```
 
 | 경로 | 역할 |
 | --- | --- |
-| `plugins/agent-company/skills/company/SKILL.md` | CEO Plan Mode 운영 절차와 승인 규칙입니다. |
-| `plugins/agent-company/server/src` | v2 상태 관리, MCP JSON-RPC stdio 서버, 로컬 HTTP 회의 서버입니다. |
-| `plugins/agent-company/references/roles` | 직원 역할별 판단 기준과 작업 절차입니다. |
-| `plugins/agent-company/references/protocols` | 승인, 라우팅, 회의, 출력 계약, 작업 방식 프로토콜입니다. |
-| `plugins/agent-company/scripts/validate-plugin.mjs` | 플러그인 manifest, skill, MCP, 문서 구조 검증 스크립트입니다. |
+| `skills/company/SKILL.md` | CEO Plan Mode 운영 절차와 승인 규칙입니다. |
+| `server/src` | v2 상태 관리, MCP JSON-RPC stdio 서버, 로컬 HTTP 회의 서버입니다. |
+| `references/roles` | 직원 역할별 판단 기준과 작업 절차입니다. |
+| `references/protocols` | 승인, 라우팅, 회의, 출력 계약, 작업 방식 프로토콜입니다. |
+| `scripts/validate-plugin.mjs` | 플러그인 manifest, skill, MCP, 문서 구조 검증 스크립트입니다. |
 
 ## 런타임 상태
 
@@ -132,6 +132,8 @@ http://127.0.0.1:<port>/meetings/<meeting_id>?token=<token>
 파일 기록을 직접 확인하려면 해당 회의의 `messages.jsonl`을 읽으면 됩니다.
 
 다중 참가자 회의에서 전원이 동의했더라도 구조적 반박 라운드가 부족하면 consensus snapshot의 `discussionSatisfied`가 false가 되고 `discussionInsufficientParticipants`에 부족한 역할이 표시됩니다. 이때 `consensus.reached`는 false이며 viewer는 “반박 부족” 상태를 보여줍니다.
+
+조건부 동의는 consensus snapshot의 `conditionalParticipants`에 남으므로, CEO는 회의를 닫을 때 조건부 동의 조건을 합의문과 다음 액션에 보존해야 합니다.
 
 ```sh
 cat .agent-company/v2/meetings/<meeting_id>/messages.jsonl
