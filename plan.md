@@ -231,3 +231,21 @@ Agent Company에 `$agent-company:deep-discussion` 별도 스킬을 추가한다.
 
 - `npm run validate`
 - `git diff --check`
+
+## 2026-06-01 Remote Main Refresh Plan
+
+### Summary
+
+현재 로컬 `main`을 `origin/main`에 반영해 GitHub에 올라간 내용을 이 작업공간 기준으로 갱신한다. 저장소 삭제, 오펀 브랜치 재작성, 강제 푸시는 승인 없이는 하지 않는다.
+
+### Scope
+
+- 원격과 로컬 브랜치 상태를 확인한다.
+- 로컬 `main`이 원격보다 앞선 커밋을 검증한다.
+- 검증이 통과하면 `origin/main`에 일반 푸시한다.
+
+### Verification
+
+- `npm run check`
+- `git diff --check`
+- `git status --short --branch`

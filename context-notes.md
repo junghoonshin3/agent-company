@@ -203,3 +203,12 @@
 - User asked to add the feature to README and then push, commit, and merge.
 - Root README already had a feature bullet and quick-start example, but it did not have a dedicated section explaining when to use deep discussion or how it differs from standard mode.
 - Scope is documentation only. No runtime, MCP, or skill behavior changes are needed.
+
+## 2026-06-01 remote main refresh
+
+- User asked to remove the currently uploaded Git project and upload this one again.
+- The active Git root is `/Users/junghoon/Documents/develop/etc/agent-company`, while the prompt cwd is the plugin directory at `plugins/agent-company`.
+- `origin` points to `https://github.com/junghoonshin3/agent-company.git`.
+- Local `main` is one commit ahead of `origin/main` with commit `7e91f2b` named `불필요한 플러그인 외부 파일 정리`.
+- Chosen safe interpretation is to update `origin/main` to the current local `main` with a normal push. Do not delete the GitHub repository, rewrite all history, or force push without explicit approval.
+- Verification passed with `npm run check` after rerunning outside the sandbox for local `127.0.0.1` bind permission, and `git diff --check`.
