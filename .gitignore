@@ -2,9 +2,5 @@
 .*-agent-company-worktrees/
 node_modules/
 .DS_Store
+/.mcp.json
 /examples/**/dist/
-.agents/
-plugins/
-plan.md
-checklist.md
-context-notes.md
