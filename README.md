@@ -29,11 +29,18 @@ Agent Company는 Codex 안에서 CEO 주도의 작은 제품 팀을 운영하기
 공개 GitHub marketplace를 Codex에 추가하고 플러그인을 설치합니다.
 
 ```sh
-codex plugin marketplace add junghoonshin3/agent-company --ref main
+codex plugin marketplace add junghoonshin3/agent-company
 codex plugin add agent-company@agent-company-plugin
 ```
 
-업데이트를 받을 때는 marketplace를 새로고침한 뒤 다시 설치합니다.
+특정 릴리스에 고정해서 설치하려면 태그를 지정합니다.
+
+```sh
+codex plugin marketplace add junghoonshin3/agent-company@v0.2.0
+codex plugin add agent-company@agent-company-plugin
+```
+
+최신 `main` 설치자는 업데이트를 받을 때 marketplace를 새로고침한 뒤 다시 설치합니다.
 
 ```sh
 codex plugin marketplace upgrade agent-company-plugin
