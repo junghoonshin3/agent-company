@@ -4,3 +4,6 @@ node_modules/
 .DS_Store
 /.mcp.json
 /examples/**/dist/
+plan.md
+context-notes.md
+checklist.md
