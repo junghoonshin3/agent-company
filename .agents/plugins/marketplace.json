@@ -1,5 +1,5 @@
 {
-  "name": "agentinc-company-plugin",
+  "name": "agent-company-plugin",
   "interface": {
     "displayName": "AgentInc Local Plugins"
   },
